@@ -52,7 +52,7 @@ public class ChildService {
         return resultList;
     }
 
-    public ChildDto checkId(Long id) {
+    public ChildDto getChildById(Long id) {
         Util.checkId(id, repos);
         Child requestedChild = repos.findById(id).get();
         ChildDto requestedChildDto = new ChildDto();
