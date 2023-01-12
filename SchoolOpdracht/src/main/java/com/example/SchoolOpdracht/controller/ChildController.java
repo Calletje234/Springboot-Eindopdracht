@@ -5,6 +5,7 @@ import com.example.SchoolOpdracht.dto.ChildDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.service.ChildService;
+import com.sun.xml.bind.v2.TODO;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -37,7 +38,7 @@ public class ChildController {
     @PostMapping("")
     public ResponseEntity<String> createChild(@Valid @RequestBody ChildDto childDto, BindingResult br) {
         if(br.hasErrors()) {
-            return new ResponseEntity<>(util.createErrorMessage(br).toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(util.createErrorMessage(br).toString(), HttpStatus.BAD_REQUEST);
         }
         Long createdId = service.createChild(childDto);
 
@@ -45,6 +46,14 @@ public class ChildController {
                 ServletUriComponentsBuilder.fromCurrentContextPath().path("/children/" + createdId).toUriString());
         return ResponseEntity.created(uri).body("Child Created");
 
+    }
+
+
+
+    //TODO create removeChildById function
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ChildDto> removeChildById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.removeChildById(id));
     }
 
 }

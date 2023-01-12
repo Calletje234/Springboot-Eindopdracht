@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.controller;
 
 import com.example.SchoolOpdracht.dto.TeacherDto;
+import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.service.TeacherService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -49,5 +50,11 @@ public class TeacherController {
                         fromCurrentContextPath().
                         path("/teachers/" + createdId).toUriString());
         return ResponseEntity.created(uri).body("Teacher created!");
+    }
+
+    // TODO create method for removeTeacherById
+    @DeleteMapping("/{id}")
+    public ResponseEntity<TeacherDto> removeTeacherById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.removeTeacherById(id));
     }
 }

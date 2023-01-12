@@ -22,7 +22,7 @@ public class Parent {
     private String countryOfOrigin;
     private String spokenLanguage;
 
-    @OneToMany(mappedBy = "mother")
+    // @OneToMany(mappedBy = "mother")
 
 
 }

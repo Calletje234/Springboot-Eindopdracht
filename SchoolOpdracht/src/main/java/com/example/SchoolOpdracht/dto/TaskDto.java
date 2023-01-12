@@ -11,4 +11,5 @@ public class TaskDto {
     @NotBlank
     public Long parentId;
     public Long teacherId;
+    public String status;
 }

@@ -40,4 +40,16 @@ public class OpmerkingController {
         return ResponseEntity.created(uri).body("Opmerking created");
     }
 
+    // TODO create method for deleteOpmerkingById
+    @DeleteMapping("/{id}")
+    public ResponseEntity<OpmerkingenDto> removeOpmerkingById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.deleteOpmerkingById(id));
+    }
+
+    // TODO create method for updateOpmerkingById
+    @PatchMapping("/{id}")
+    public ResponseEntity<OpmerkingenDto> updateOpmerkingById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.updateOpmerkingById(id));
+    }
+
 }

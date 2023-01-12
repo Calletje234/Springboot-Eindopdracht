@@ -17,6 +17,7 @@ public class Task {
     private Long childId;
     private Long TeacherId;
     private Long ParentId;
+    private String Status;
     private LocalDate dueDate;
 
     @ManyToOne

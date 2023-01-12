@@ -33,7 +33,7 @@ public class TaskService {
         return savedTask.getTaskId();
     }
 
-    public Iterable<TaskDto> getTask() {
+    public Iterable<TaskDto> getAllTask() {
         Iterable<Task> allTasks = repos.findAll();
         ArrayList<TaskDto> resultList = new ArrayList<>();
         for(Task t : allTasks) {
@@ -58,13 +58,30 @@ public class TaskService {
         return requestedTaskDto;
         }
 
-    public void changeAssignedTeacher(Long taskId, Long teacherId) {
-        checkId(teacherId);
+    public void changeTaskStatus(Long id, TaskDto taskDto) {
+        checkId(id);
+        Task taskToChange = repos.findById(id).get();
+        taskToChange.setStatus(taskDto.status);
+    }
+
+    public void changeDueDate(Long id, TaskDto taskDto) {
+        checkId(id);
+        Task taskToChange = repos.findById(id).get();
+        taskToChange.setDueDate(taskDto.dueDate);
+    }
+
+    public void changeAssignedTeacher(Long taskId, TaskDto taskDto) {
         checkId(taskId);
         Task taskToChange = repos.findById(taskId).get();
-        taskToChange.setTeacherId(teacherId);
+        taskToChange.setTeacherId(taskDto.teacherId);
         repos.save(taskToChange);
+    }
 
+    public void changeParentId(Long taskId, TaskDto taskDto) {
+        checkId(taskId);
+        Task taskToChange = repos.findById(taskId).get();
+        taskToChange.setParentId(taskDto.parentId);
+        repos.save(taskToChange);
     }
 
     public void checkId(Long id) {
