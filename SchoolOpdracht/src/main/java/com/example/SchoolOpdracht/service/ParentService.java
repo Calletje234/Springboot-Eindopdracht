@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Parent;
 import com.example.SchoolOpdracht.repository.ParentRepository;
 import org.springframework.stereotype.Service;
@@ -37,36 +38,80 @@ public class ParentService {
         Iterable<Parent> allParents = repos.findAll();
         ArrayList<ParentDto> resultList = new ArrayList<>();
         for(Parent p : allParents) {
-            ParentDto newParentDto = new ParentDto();
-            newParentDto.firstName = p.getFirstName();
-            newParentDto.lastName = p.getLastName();
-            newParentDto.phoneNumber = p.getPhoneNumber();
-            newParentDto.address = p.getAddress();
-            newParentDto.countryOfOrigin = p.getCountryOfOrigin();
-            newParentDto.spokenLanguage = p.getSpokenLanguage();
-            newParentDto.childId = p.getChildId();
-            resultList.add(newParentDto);
+            resultList.add(createReturnDto(p));
         }
         return resultList;
     }
 
     public ParentDto getParentById(Long id) {
-        if(id < 0) {
-            throw new IndexOutOfBoundsException("Id is not allowed to be negative");
-        } else if(!repos.existsById(id)) {
-            throw new RecordNotFoundException("Id not found");
-        } else {
-            Parent requestedParent = repos.findById(id).get();
-            ParentDto requestedParentDto = new ParentDto();
-            requestedParentDto.firstName = requestedParent.getFirstName();
-            requestedParentDto.lastName = requestedParent.getLastName();
-            requestedParentDto.address = requestedParent.getAddress();
-            requestedParentDto.phoneNumber = requestedParent.getPhoneNumber();
-            requestedParentDto.countryOfOrigin = requestedParent.getCountryOfOrigin();
-            requestedParentDto.spokenLanguage = requestedParent.getSpokenLanguage();
-            requestedParentDto.childId = requestedParent.getChildId();
-            return requestedParentDto;
-        }
+        Parent requestedParent = getParentRepos(id);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeChildId(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setChildId(parentDto.childId);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeFirstName(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setFirstName(parentDto.firstName);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeLastName(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setLastName(parentDto.lastName);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changePhoneNumber(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setPhoneNumber(parentDto.phoneNumber);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeAddress(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setAddress(parentDto.address);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeCountryOfOrigin(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setCountryOfOrigin(parentDto.countryOfOrigin);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto changeSpokenLanguage(Long id, ParentDto parentDto) {
+        Parent requestedParent = getParentRepos(id);
+        requestedParent.setSpokenLanguage(parentDto.spokenLanguage);
+        repos.save(requestedParent);
+        return createReturnDto(requestedParent);
+    }
+
+    public ParentDto createReturnDto(Parent parentModel) {
+        ParentDto requestedDto = new ParentDto();
+        requestedDto.firstName = parentModel.getFirstName();
+        requestedDto.lastName = parentModel.getLastName();
+        requestedDto.address = parentModel.getAddress();
+        requestedDto.phoneNumber = parentModel.getPhoneNumber();
+        requestedDto.countryOfOrigin = parentModel.getCountryOfOrigin();
+        requestedDto.spokenLanguage = parentModel.getSpokenLanguage();
+        requestedDto.childId = parentModel.getChildId();
+        return requestedDto;
+    }
+
+    public Parent getParentRepos(Long id) {
+        Util.checkId(id, repos);
+        return repos.findById(id).get();
     }
 
 }

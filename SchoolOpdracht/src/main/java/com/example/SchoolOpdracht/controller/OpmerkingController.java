@@ -1,7 +1,10 @@
 package com.example.SchoolOpdracht.controller;
 
 import com.example.SchoolOpdracht.dto.OpmerkingenDto;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.service.OpmerkingService;
+import org.apache.coyote.Response;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
@@ -46,10 +49,34 @@ public class OpmerkingController {
         return ResponseEntity.ok(service.deleteOpmerkingById(id));
     }
 
-    // TODO create method for updateOpmerkingById
-    @PatchMapping("/{id}")
-    public ResponseEntity<OpmerkingenDto> updateOpmerkingById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.updateOpmerkingById(id));
+    @PutMapping("/changeTask/{id}")
+    public ResponseEntity updateOpmerkingById(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
+                                                              @PathVariable Long id,
+                                                              BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeTaskId(id, opmerkingenDto));
+    }
+
+    @PutMapping("/changeOpmerking/{id}")
+    public ResponseEntity changeOpmerking(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
+                                          @PathVariable Long id,
+                                          BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeOpmerking(id, opmerkingenDto));
+    }
+
+    @PutMapping("/changeContactDate/{id}")
+    public ResponseEntity changeContactDate(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
+                                            @PathVariable Long id,
+                                            BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeContactDate(id, opmerkingenDto));
     }
 
 }

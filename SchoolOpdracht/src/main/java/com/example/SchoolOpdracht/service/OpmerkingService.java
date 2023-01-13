@@ -3,10 +3,12 @@ package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Opmerkingen;
 import com.example.SchoolOpdracht.repository.OpmerkingenRepository;
 import org.springframework.stereotype.Service;
 
+import javax.management.openmbean.OpenMBeanAttributeInfo;
 import java.util.ArrayList;
 
 @Service
@@ -33,27 +35,46 @@ public class OpmerkingService {
         Iterable<Opmerkingen> allOpmerkingen = repos.findAll();
         ArrayList<OpmerkingenDto> resultList = new ArrayList<>();
         for(Opmerkingen o: allOpmerkingen){
-            OpmerkingenDto newOpmerkingenDto = new OpmerkingenDto();
-            newOpmerkingenDto.taskId = o.getTaskId();
-            newOpmerkingenDto.dateOfContact = o.getDateOfContact();
-            newOpmerkingenDto.opmerking = o.getOpmerking();
-            resultList.add(newOpmerkingenDto);
+            resultList.add(createReturnDto(o));
         }
         return resultList;
     }
 
     public OpmerkingenDto getOpmerkingById(Long id) {
-        if(id < 0) {
-            throw new IndexOutOfBoundsException("Id is not allowed to be negative");
-        } else if (!repos.existsById(id)) {
-            throw new RecordNotFoundException("Id not found");
-        } else {
-            Opmerkingen requestedOpmerking = repos.findById(id).get();
-            OpmerkingenDto requestedOpmerkingDto = new OpmerkingenDto();
-            requestedOpmerkingDto.taskId = requestedOpmerking.getTaskId();
-            requestedOpmerkingDto.dateOfContact = requestedOpmerking.getDateOfContact();
-            requestedOpmerkingDto.opmerking = requestedOpmerking.getOpmerking();
-            return requestedOpmerkingDto;
-        }
+        Util.checkId(id, repos);
+        Opmerkingen requestedOpmerking = repos.findById(id).get();
+        return createReturnDto(requestedOpmerking);
+    }
+
+    public OpmerkingenDto changeOpmerking(Long id, OpmerkingenDto opmerkingenDto) {
+        Util.checkId(id, repos);
+        Opmerkingen requestOpmerking = repos.findById(id).get();
+        requestOpmerking.setOpmerking(opmerkingenDto.opmerking);
+        repos.save(requestOpmerking);
+        return createReturnDto(requestOpmerking);
+    }
+
+    public OpmerkingenDto changeContactDate(Long id, OpmerkingenDto opmerkingenDto) {
+        Util.checkId(id, repos);
+        Opmerkingen requestOpmerking = repos.findById(id).get();
+        requestOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
+        repos.save(requestOpmerking);
+        return createReturnDto(requestOpmerking);
+    }
+
+    public OpmerkingenDto changeTaskId(Long id, OpmerkingenDto opmerkingenDto) {
+        Util.checkId(id, repos);
+        Opmerkingen requestOpmerking = repos.findById(id).get();
+        requestOpmerking.setTaskId(opmerkingenDto.taskId);
+        repos.save(requestOpmerking);
+        return createReturnDto(requestOpmerking);
+    }
+
+    public OpmerkingenDto createReturnDto(Opmerkingen opmerking) {
+        OpmerkingenDto requestDto = new OpmerkingenDto();
+        requestDto.taskId = opmerking.getTaskId();
+        requestDto.dateOfContact = opmerking.getDateOfContact();
+        requestDto.opmerking = opmerking.getOpmerking();
+        return requestDto;
     }
 }

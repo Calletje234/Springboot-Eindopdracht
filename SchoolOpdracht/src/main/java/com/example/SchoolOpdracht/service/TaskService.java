@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
@@ -48,7 +49,7 @@ public class TaskService {
     }
 
     public TaskDto getTaskById(Long id) {
-        checkId(id);
+        Util.checkId(id, repos);
         Task requestedTask = repos.findById(id).get();
         TaskDto requestedTaskDto = new TaskDto();
         requestedTaskDto.childId = requestedTask.getChildId();
@@ -58,37 +59,45 @@ public class TaskService {
         return requestedTaskDto;
         }
 
-    public void changeTaskStatus(Long id, TaskDto taskDto) {
-        checkId(id);
+    public TaskDto changeTaskStatus(Long id, TaskDto taskDto) {
+        Util.checkId(id, repos);
         Task taskToChange = repos.findById(id).get();
         taskToChange.setStatus(taskDto.status);
+        repos.save(taskToChange);
+        return createReturnDto(taskToChange);
     }
 
-    public void changeDueDate(Long id, TaskDto taskDto) {
-        checkId(id);
+    public TaskDto changeDueDate(Long id, TaskDto taskDto) {
+        Util.checkId(id, repos);
         Task taskToChange = repos.findById(id).get();
         taskToChange.setDueDate(taskDto.dueDate);
+        repos.save(taskToChange);
+        return createReturnDto(taskToChange);
     }
 
-    public void changeAssignedTeacher(Long taskId, TaskDto taskDto) {
-        checkId(taskId);
+    public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
+        Util.checkId(taskId, repos);
         Task taskToChange = repos.findById(taskId).get();
         taskToChange.setTeacherId(taskDto.teacherId);
         repos.save(taskToChange);
+        return createReturnDto(taskToChange);
     }
 
-    public void changeParentId(Long taskId, TaskDto taskDto) {
-        checkId(taskId);
+    public TaskDto changeParentId(Long taskId, TaskDto taskDto) {
+        Util.checkId(taskId, repos);
         Task taskToChange = repos.findById(taskId).get();
         taskToChange.setParentId(taskDto.parentId);
         repos.save(taskToChange);
+        return createReturnDto(taskToChange);
     }
 
-    public void checkId(Long id) {
-        if(id < 0) {
-            throw new IndexOutOfBoundsException("Id is not allowed to be negative");
-        } else if (!repos.existsById(id)) {
-            throw new RecordNotFoundException("Id not found");
-        }
+    public TaskDto createReturnDto(Task changedModel) {
+        TaskDto requestedDto = new TaskDto();
+        requestedDto.teacherId = changedModel.getTeacherId();
+        requestedDto.parentId = changedModel.getParentId();
+        requestedDto.dueDate = changedModel.getDueDate();
+        requestedDto.childId = changedModel.getChildId();
+        requestedDto.status = changedModel.getStatus();
+        return requestedDto;
     }
 }

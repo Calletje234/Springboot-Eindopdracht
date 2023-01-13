@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.controller;
 
 import com.example.SchoolOpdracht.dto.TeacherDto;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.service.TeacherService;
 import org.springframework.http.HttpStatus;
@@ -35,13 +36,7 @@ public class TeacherController {
     @PostMapping("")
     public ResponseEntity<String> createTeacher(@Valid @RequestBody TeacherDto teacherDto, BindingResult br){
         if (br.hasErrors()) {
-            StringBuilder sb = new StringBuilder();
-            for (FieldError fe : br.getFieldErrors()) {
-                sb.append(fe.getField() + ": ");
-                sb.append(fe.getDefaultMessage());
-                sb.append("\n");
-            }
-            return new ResponseEntity<>(sb.toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
         Long createdId = service.createTeacher(teacherDto);
 
@@ -56,5 +51,13 @@ public class TeacherController {
     @DeleteMapping("/{id}")
     public ResponseEntity<TeacherDto> removeTeacherById(@PathVariable Long id) {
         return ResponseEntity.ok(service.removeTeacherById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity addTaskAmount(@Valid @RequestBody TeacherDto teacherDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.addTaskAmount(id, teacherDto));
     }
 }

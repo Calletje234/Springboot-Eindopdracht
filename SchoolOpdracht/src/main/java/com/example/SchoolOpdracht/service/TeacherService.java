@@ -38,11 +38,7 @@ public class TeacherService {
         Iterable<Teacher> allTeacher = repos.findAll();
         ArrayList<TeacherDto> resultList = new ArrayList<>();
         for(Teacher t: allTeacher){
-            TeacherDto newTeacherDto = new TeacherDto();
-            newTeacherDto.firstName = t.getFirstName();
-            newTeacherDto.lastName = t.getLastName();
-            newTeacherDto.taskAmount = t.getTaskAmount();
-            resultList.add(newTeacherDto);
+            resultList.add(getReturnTeacherDto(t));
         }
         return resultList;
     }
@@ -50,12 +46,24 @@ public class TeacherService {
     public TeacherDto getTeacherById(Long id) {
         Util.checkId(id, repos);
         Teacher requestedTeacher = repos.findById(id).get();
-        TeacherDto requestedTeacherDto = new TeacherDto();
-        requestedTeacherDto.firstName = requestedTeacher.getFirstName();
-        requestedTeacherDto.lastName = requestedTeacher.getLastName();
-        requestedTeacherDto.taskAmount = requestedTeacher.getTaskAmount();
-        return requestedTeacherDto;
+        return getReturnTeacherDto(requestedTeacher);
 
+    }
+
+    public TeacherDto addTaskAmount(Long id, TeacherDto teacherDto) {
+        Util.checkId(id, repos);
+        Teacher requestedTeacher = repos.findById(id).get();
+        requestedTeacher.setTaskAmount(teacherDto.taskAmount);
+        repos.save(requestedTeacher);
+        return getReturnTeacherDto(requestedTeacher);
+    }
+
+    public TeacherDto getReturnTeacherDto(Teacher changedModel) {
+        TeacherDto requestDto = new TeacherDto();
+        requestDto.firstName = changedModel.getFirstName();
+        requestDto.lastName = changedModel.getLastName();
+        requestDto.taskAmount = changedModel.getTaskAmount();
+        return requestDto;
     }
 
 }

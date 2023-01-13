@@ -3,7 +3,6 @@ package com.example.SchoolOpdracht.controller;
 
 import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.helpers.Util;
-import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.service.TaskService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,7 +17,6 @@ import java.net.URI;
 @RequestMapping("/tasks")
 public class TaskController {
     private final TaskService service;
-    private Util util;
 
     public TaskController(TaskService t) {
         this.service = t;
@@ -35,7 +33,7 @@ public class TaskController {
     @PostMapping("")
     public ResponseEntity<String> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult br) {
         if(br.hasErrors()) {
-            return new ResponseEntity(util.createErrorMessage(br).toString(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
         Long createdId = service.createTask(taskDto);
 
@@ -45,26 +43,40 @@ public class TaskController {
     }
 
     @PutMapping("/changeTeacher/{id}")
-    public ResponseEntity<TaskDto> changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id) {
-        service.changeAssignedTeacher(id, taskDto);
-        return ResponseEntity.ok(service.getTaskById(id));
+    public ResponseEntity changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeAssignedTeacher(id, taskDto));
     }
 
     @PutMapping("/updateStatus/{id}")
-    public ResponseEntity<TaskDto> updateTaskStatus(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id ) {
-        service.changeTaskStatus(id, taskDto);
-        return ResponseEntity.ok(service.getTaskById(id));
+    public ResponseEntity updateTaskStatus(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeTaskStatus(id, taskDto));
     }
 
     @PutMapping("/changeParent/{id}")
-    public ResponseEntity<TaskDto> changeParent(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id) {
-        service.changeParentId(id, taskDto);
-        return ResponseEntity.ok(service.getTaskById(id));
+    public ResponseEntity changeParent(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeParentId(id, taskDto));
     }
 
     @PutMapping("/updateDueDate/{id}")
-    public ResponseEntity<TaskDto> updateDueDate(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id) {
-        service.changeDueDate(id, taskDto);
-        return ResponseEntity.ok(service.getTaskById(id));
+    public ResponseEntity updateDueDate(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeDueDate(id, taskDto));
+    }
+
+    //TODO: Add logic for deleting task
+    @DeleteMapping("/${id}")
+    public ResponseEntity deleteTask(@PathVariable Long id) {
+        return ResponseEntity.ok(service.removeTaskById(id));
     }
 }
