@@ -1,6 +1,8 @@
 package com.example.SchoolOpdracht.controller;
 
+
 import com.example.SchoolOpdracht.dto.AuthDto;
+import com.example.SchoolOpdracht.security.JwtService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,12 +16,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class Authcontroller {
+public class AuthController {
 
     private final AuthenticationManager authManager;
     private final JwtService jwtService;
 
-    public Authcontroller(AuthenticationManager man, JwtService service) {
+    public AuthController(AuthenticationManager man, JwtService service) {
         this.authManager = man;
         this.jwtService = service;
     }
@@ -28,7 +30,6 @@ public class Authcontroller {
     public ResponseEntity<Object> signIn(@RequestBody AuthDto authDto) {
         UsernamePasswordAuthenticationToken up =
                 new UsernamePasswordAuthenticationToken(authDto.username, authDto.password);
-
         try {
             Authentication auth = authManager.authenticate(up);
 
@@ -40,7 +41,7 @@ public class Authcontroller {
                     .body("Token generated");
         }
         catch (AuthenticationException ex) {
-            return new ResponseEntity<>(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity(ex.getMessage(), HttpStatus.UNAUTHORIZED);
         }
     }
 }
