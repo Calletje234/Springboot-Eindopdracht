@@ -43,7 +43,6 @@ public class OpmerkingController {
         return ResponseEntity.created(uri).body("Opmerking created");
     }
 
-    // TODO create method for deleteOpmerkingById
     @DeleteMapping("/{id}")
     public ResponseEntity<OpmerkingenDto> removeOpmerkingById(@PathVariable Long id) {
         return ResponseEntity.ok(service.deleteOpmerkingById(id));
@@ -77,6 +76,11 @@ public class OpmerkingController {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(service.changeContactDate(id, opmerkingenDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteOpmerkingById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.deleteOpmerkingById(id));
     }
 
 }

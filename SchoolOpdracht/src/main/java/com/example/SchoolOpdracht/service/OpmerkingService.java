@@ -23,7 +23,6 @@ public class OpmerkingService {
         Opmerkingen newOpmerking = new Opmerkingen();
 
         // map dto to entity
-        newOpmerking.setTaskId(opmerkingenDto.taskId);
         newOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
         newOpmerking.setOpmerking(opmerkingenDto.opmerking);
 
@@ -68,6 +67,13 @@ public class OpmerkingService {
         requestOpmerking.setTaskId(opmerkingenDto.taskId);
         repos.save(requestOpmerking);
         return createReturnDto(requestOpmerking);
+    }
+
+    public OpmerkingenDto deleteOpmerkingById(Long id) {
+        Util.checkId(id, repos);
+        Opmerkingen deletedOpmerking = repos.findById(id).get();
+        repos.deleteById(id);
+        return createReturnDto(deletedOpmerking);
     }
 
     public OpmerkingenDto createReturnDto(Opmerkingen opmerking) {

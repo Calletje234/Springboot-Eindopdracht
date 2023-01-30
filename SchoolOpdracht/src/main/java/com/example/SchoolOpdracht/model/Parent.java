@@ -5,16 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "Parents")
 @Getter @Setter
 public class Parent {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parentId;
-    private Long childId;
-    private Long taskId;
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -22,7 +21,9 @@ public class Parent {
     private String countryOfOrigin;
     private String spokenLanguage;
 
-    // @OneToMany(mappedBy = "mother")
+    @OneToMany(mappedBy = "parent")
+    private List<Child> children;
 
-
+    @OneToOne(mappedBy = "parent")
+    private Task task;
 }

@@ -26,8 +26,6 @@ public class TaskService {
         Task newTask = new Task();
 
         // map dto to entity
-        newTask.setChildId(taskDto.childId);
-        newTask.setParentId(taskDto.parentId);
         newTask.setDueDate(taskDto.dueDate);
 
         Task savedTask = repos.save(newTask);
@@ -39,10 +37,7 @@ public class TaskService {
         ArrayList<TaskDto> resultList = new ArrayList<>();
         for(Task t : allTasks) {
             TaskDto newTaskDto = new TaskDto();
-            newTaskDto.childId = t.getChildId();
             newTaskDto.dueDate = t.getDueDate();
-            newTaskDto.parentId = t.getParentId();
-            newTaskDto.teacherId = t.getTeacherId();
             resultList.add(newTaskDto);
         }
         return resultList;
@@ -52,52 +47,46 @@ public class TaskService {
         Util.checkId(id, repos);
         Task requestedTask = repos.findById(id).get();
         TaskDto requestedTaskDto = new TaskDto();
-        requestedTaskDto.childId = requestedTask.getChildId();
-        requestedTaskDto.parentId = requestedTask.getParentId();
         requestedTaskDto.dueDate = requestedTask.getDueDate();
-        requestedTaskDto.teacherId = requestedTask.getTeacherId();
         return requestedTaskDto;
         }
 
-    public TaskDto changeTaskStatus(Long id, TaskDto taskDto) {
-        Util.checkId(id, repos);
-        Task taskToChange = repos.findById(id).get();
+    public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
+        Task taskToChange = getTaskRepos(taskId);
         taskToChange.setStatus(taskDto.status);
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeDueDate(Long id, TaskDto taskDto) {
-        Util.checkId(id, repos);
-        Task taskToChange = repos.findById(id).get();
+    public TaskDto changeDueDate(Long taskId, TaskDto taskDto) {
+        Task taskToChange = getTaskRepos(taskId);
         taskToChange.setDueDate(taskDto.dueDate);
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
 
     public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
-        Util.checkId(taskId, repos);
-        Task taskToChange = repos.findById(taskId).get();
+        Task taskToChange = getTaskRepos(taskId);
         taskToChange.setTeacherId(taskDto.teacherId);
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeParentId(Long taskId, TaskDto taskDto) {
-        Util.checkId(taskId, repos);
-        Task taskToChange = repos.findById(taskId).get();
-        taskToChange.setParentId(taskDto.parentId);
-        repos.save(taskToChange);
-        return createReturnDto(taskToChange);
+    public TaskDto deleteTaskById(Long taskId) {
+        Task deletedTask = getTaskRepos(taskId);
+        repos.deleteById(taskId);
+        return createReturnDto(deletedTask);
     }
 
     public TaskDto createReturnDto(Task changedModel) {
         TaskDto requestedDto = new TaskDto();
-        requestedDto.teacherId = changedModel.getTeacherId();
-        requestedDto.parentId = changedModel.getParentId();
-        requestedDto.dueDate = changedModel.getDueDate();
-        requestedDto.childId = changedModel.getChildId();
+        requestedDto.dueDate = changedModel.getDueDate();;
         requestedDto.status = changedModel.getStatus();
         return requestedDto;
+    }
+
+    public Task getTaskRepos(Long id) {
+        Util.checkId(id, repos);
+        return repos.findById(id).get();
     }
 }

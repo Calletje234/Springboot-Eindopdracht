@@ -74,9 +74,8 @@ public class TaskController {
         return ResponseEntity.ok(service.changeDueDate(id, taskDto));
     }
 
-    //TODO: Add logic for deleting task
     @DeleteMapping("/${id}")
     public ResponseEntity deleteTask(@PathVariable Long id) {
-        return ResponseEntity.ok(service.removeTaskById(id));
+        return ResponseEntity.ok(service.deleteTaskById(id));
     }
 }

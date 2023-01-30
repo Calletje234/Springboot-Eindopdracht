@@ -13,10 +13,8 @@ import java.util.ArrayList;
 @Getter @Setter
 public class Child {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long childId;
-    private Long parentId;
-    private Long taskId;
     private String firstName;
     private String lastName;
     private LocalDate dob;
@@ -26,12 +24,10 @@ public class Child {
     private ArrayList<String> Allergies;
     private LocalDate startingDate;
 
-    @ManyToMany(mappedBy = "child")
+    @OneToOne(mappedBy = "child")
     private Task task;
 
-    @ManyToOne()
-    private Parent mother;
-    @ManyToOne()
-    private Parent father;
-
+    @ManyToOne
+    @JoinColumn(name = "parent_id")
+    private Parent parent;
 }

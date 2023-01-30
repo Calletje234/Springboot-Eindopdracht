@@ -12,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.ArrayList;
 
 @RestController
 @RequestMapping("/childs")
@@ -37,7 +38,7 @@ public class ChildController {
         if(br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        Long createdId = service.createChild(childDto);
+        Iterable<Long> createdId = service.createChild(childDto);
 
         URI uri = URI.create(
                 ServletUriComponentsBuilder.fromCurrentContextPath().path("/children/" + createdId).toUriString());
@@ -131,7 +132,6 @@ public class ChildController {
         return ResponseEntity.ok(service.changeChangeParent(id, childDto));
     }
 
-    //TODO create removeChildById function
     @DeleteMapping("/{id}")
     public ResponseEntity<ChildDto> removeChildById(@PathVariable Long id) {
         return ResponseEntity.ok(service.removeChildById(id));

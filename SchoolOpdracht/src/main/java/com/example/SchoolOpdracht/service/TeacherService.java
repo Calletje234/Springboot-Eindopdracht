@@ -44,18 +44,35 @@ public class TeacherService {
     }
 
     public TeacherDto getTeacherById(Long id) {
-        Util.checkId(id, repos);
-        Teacher requestedTeacher = repos.findById(id).get();
+        Teacher requestedTeacher = getTeacherRepos(id);
         return getReturnTeacherDto(requestedTeacher);
-
     }
 
     public TeacherDto addTaskAmount(Long id, TeacherDto teacherDto) {
-        Util.checkId(id, repos);
-        Teacher requestedTeacher = repos.findById(id).get();
+        Teacher requestedTeacher = getTeacherRepos(id);
         requestedTeacher.setTaskAmount(teacherDto.taskAmount);
         repos.save(requestedTeacher);
         return getReturnTeacherDto(requestedTeacher);
+    }
+
+    public TeacherDto changeFirstName(Long id, TeacherDto teacherDto) {
+        Teacher teacherToChange = getTeacherRepos(id);
+        teacherToChange.setFirstName(teacherDto.firstName);
+        repos.save(teacherToChange);
+        return getReturnTeacherDto(teacherToChange);
+    }
+
+    public TeacherDto changeLastName(Long id, TeacherDto teacherDto) {
+        Teacher teacherToChange = getTeacherRepos(id);
+        teacherToChange.setLastName(teacherDto.lastName);
+        repos.save(teacherToChange);
+        return getReturnTeacherDto(teacherToChange);
+    }
+
+    public TeacherDto deleteTeacherById(Long id) {
+        Teacher deletedTeacher = getTeacherRepos(id);
+        repos.deleteById(id);
+        return getReturnTeacherDto(deletedTeacher);
     }
 
     public TeacherDto getReturnTeacherDto(Teacher changedModel) {
@@ -64,6 +81,11 @@ public class TeacherService {
         requestDto.lastName = changedModel.getLastName();
         requestDto.taskAmount = changedModel.getTaskAmount();
         return requestDto;
+    }
+
+    public Teacher getTeacherRepos(Long id) {
+        Util.checkId(id, repos);
+        return repos.findById(id).get();
     }
 
 }

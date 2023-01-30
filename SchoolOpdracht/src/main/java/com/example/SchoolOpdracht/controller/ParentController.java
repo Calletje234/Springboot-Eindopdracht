@@ -14,6 +14,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.naming.Binding;
 import javax.validation.Valid;
 import java.net.URI;
+import java.net.http.HttpResponse;
 
 
 @RestController
@@ -115,6 +116,11 @@ public class ParentController {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(service.changeSpokenLanguage(id, parentDto));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity deleteParentById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.deleteParentById(id));
     }
 
 

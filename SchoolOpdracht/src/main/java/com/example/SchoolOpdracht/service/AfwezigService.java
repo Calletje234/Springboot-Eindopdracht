@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.AfwezigDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Afwezig;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
 import org.springframework.stereotype.Service;
@@ -22,7 +23,6 @@ public class AfwezigService {
         Afwezig newAfwezig = new Afwezig();
 
         // map dto to entity
-        newAfwezig.setTeacherId(afwezigDto.teacherId);
         newAfwezig.setReason(afwezigDto.reason);
         newAfwezig.setStartDate(afwezigDto.startDate);
         newAfwezig.setEndDate(afwezigDto.endDate);
@@ -35,29 +35,61 @@ public class AfwezigService {
         Iterable<Afwezig> allAfwezig = repos.findAll();
         ArrayList<AfwezigDto> resultList = new ArrayList<>();
         for(Afwezig a: allAfwezig){
-            AfwezigDto newAfwezig = new AfwezigDto();
-            newAfwezig.teacherId = a.getTeacherId();
-            newAfwezig.reason = a.getReason();
-            newAfwezig.startDate = a.getStartDate();
-            newAfwezig.endDate = a.getEndDate();
-            resultList.add(newAfwezig);
+            resultList.add(createReturnDto(a));
         }
         return resultList;
     }
 
-    public AfwezigDto getAfwezigeById(Long id) {
-        if(id < 0) {
-            throw new IndexOutOfBoundsException("Id is not allowed to be negative");
-        } else if (!repos.existsById(id)) {
-            throw new RecordNotFoundException("Id not found");
-        } else {
-            Afwezig requestedAfwezige = repos.findById(id).get();
-            AfwezigDto requestedAfwezigeDto = new AfwezigDto();
-            requestedAfwezigeDto.teacherId = requestedAfwezige.getTeacherId();
-            requestedAfwezigeDto.reason = requestedAfwezige.getReason();
-            requestedAfwezigeDto.startDate = requestedAfwezige.getStartDate();
-            requestedAfwezigeDto.endDate = requestedAfwezige.getEndDate();
-            return requestedAfwezigeDto;
-        }
+    public AfwezigDto getAfwezigById(Long id) {
+        Afwezig requestedAfwezig = getAfwezigRepos(id);
+        return createReturnDto(requestedAfwezig);
+    }
+
+    public AfwezigDto changeReasonAfwezig(Long id, AfwezigDto afwezigDto) {
+        Afwezig afwezigToChange = getAfwezigRepos(id);
+        afwezigToChange.setReason(afwezigDto.reason);
+        repos.save(afwezigToChange);
+        return createReturnDto(afwezigToChange);
+    }
+
+    public AfwezigDto changeStartingDate(Long id, AfwezigDto afwezigDto) {
+        Afwezig afwezigToChange = getAfwezigRepos(id);
+        afwezigToChange.setStartDate(afwezigDto.startDate);
+        repos.save(afwezigToChange);
+        return createReturnDto(afwezigToChange);
+    }
+
+    public AfwezigDto changeEndingDate(Long id, AfwezigDto afwezigDto) {
+        Afwezig afwezigToChange = getAfwezigRepos(id);
+        afwezigToChange.setEndDate(afwezigDto.endDate);
+        repos.save(afwezigToChange);
+        return createReturnDto(afwezigToChange);
+    }
+
+    public AfwezigDto changeTeacherId(Long id, AfwezigDto afwezigDto) {
+        Afwezig afwezigToChange = getAfwezigRepos(id);
+        afwezigToChange.setTeacherId(afwezigDto.teacherId);
+        repos.save(afwezigToChange);
+        return createReturnDto(afwezigToChange);
+    }
+
+    public AfwezigDto deleteAfwezigById(Long id) {
+        Afwezig deletedAfwezig = getAfwezigRepos(id);
+        repos.deleteById(id);
+        return createReturnDto(deletedAfwezig);
+    }
+
+    public AfwezigDto createReturnDto(Afwezig afwezigModel) {
+        AfwezigDto requestedDto = new AfwezigDto();
+        requestedDto.endDate = afwezigModel.getEndDate();
+        requestedDto.teacherId = afwezigModel.getTeacherId();
+        requestedDto.reason = afwezigModel.getReason();
+        requestedDto.startDate = afwezigModel.getStartDate();
+        return requestedDto;
+    }
+
+    public Afwezig getAfwezigRepos(Long id) {
+        Util.checkId(id, repos);
+        return repos.findById(id).get();
     }
 }

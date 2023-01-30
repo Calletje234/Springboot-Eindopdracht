@@ -28,7 +28,6 @@ public class ParentService {
         newParent.setAddress(parentDto.address);
         newParent.setCountryOfOrigin(parentDto.countryOfOrigin);
         newParent.setSpokenLanguage(parentDto.spokenLanguage);
-        newParent.setChildId(parentDto.childId);
 
         Parent savedParent = repos.save(newParent);
         return savedParent.getParentId();
@@ -45,13 +44,6 @@ public class ParentService {
 
     public ParentDto getParentById(Long id) {
         Parent requestedParent = getParentRepos(id);
-        return createReturnDto(requestedParent);
-    }
-
-    public ParentDto changeChildId(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
-        requestedParent.setChildId(parentDto.childId);
-        repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
@@ -97,6 +89,12 @@ public class ParentService {
         return createReturnDto(requestedParent);
     }
 
+    public ParentDto deleteParentById(Long id) {
+        Parent deletedParent = getParentRepos(id);
+        repos.deleteById(id);
+        return createReturnDto(deletedParent);
+    }
+
     public ParentDto createReturnDto(Parent parentModel) {
         ParentDto requestedDto = new ParentDto();
         requestedDto.firstName = parentModel.getFirstName();
@@ -105,7 +103,6 @@ public class ParentService {
         requestedDto.phoneNumber = parentModel.getPhoneNumber();
         requestedDto.countryOfOrigin = parentModel.getCountryOfOrigin();
         requestedDto.spokenLanguage = parentModel.getSpokenLanguage();
-        requestedDto.childId = parentModel.getChildId();
         return requestedDto;
     }
 

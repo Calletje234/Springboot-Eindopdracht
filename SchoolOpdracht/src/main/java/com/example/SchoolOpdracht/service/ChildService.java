@@ -3,22 +3,28 @@ package com.example.SchoolOpdracht.service;
 import com.example.SchoolOpdracht.dto.ChildDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Child;
+import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.repository.ChildRepository;
+import com.example.SchoolOpdracht.repository.TaskRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 @Service
 public class ChildService {
     private final ChildRepository repos;
+    private final TaskRepository taskRepos;
 
-    public ChildService(ChildRepository c) {
+    public ChildService(ChildRepository c, TaskRepository t) {
         this.repos = c;
+        this.taskRepos = t;
     }
 
-    public Long createChild(ChildDto childDto) {
+    public Iterable<Long> createChild(ChildDto childDto) {
         Child newChild = new Child();
+        Task newTask = new Task();
 
         //map dto to entity
         newChild.setFirstName(childDto.firstName);
@@ -31,7 +37,13 @@ public class ChildService {
         newChild.setCountryOfOrigin(childDto.countryOfOrigin);
 
         Child savedChild = repos.save(newChild);
-        return savedChild.getChildId();
+        Task savedTask = taskRepos.save(newTask);
+
+        ArrayList<Long> idList = new ArrayList<>();
+        idList.add(savedChild.getChildId());
+        idList.add(savedTask.getTaskId());
+
+        return idList;
     }
 
     public Iterable<ChildDto> getAllChildren() {
@@ -129,5 +141,12 @@ public class ChildService {
     public Child getChildRepos(Long id) {
         Util.checkId(id, repos);
         return repos.findById(id).get();
+    }
+
+    public ChildDto removeChildById(Long id) {
+        Util.checkId(id, repos);
+        Child deletedChild = getChildRepos(id);
+        repos.deleteById(id);
+        return createReturnDto(deletedChild);
     }
 }

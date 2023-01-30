@@ -11,6 +11,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.naming.Binding;
 import javax.validation.Valid;
 import java.net.URI;
 
@@ -47,17 +48,38 @@ public class TeacherController {
         return ResponseEntity.created(uri).body("Teacher created!");
     }
 
-    // TODO create method for removeTeacherById
     @DeleteMapping("/{id}")
     public ResponseEntity<TeacherDto> removeTeacherById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.removeTeacherById(id));
+        return ResponseEntity.ok(service.deleteTeacherById(id));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity addTaskAmount(@Valid @RequestBody TeacherDto teacherDto, @PathVariable Long id, BindingResult br) {
+    public ResponseEntity addTaskAmount(@Valid @RequestBody TeacherDto teacherDto,
+                                        @PathVariable Long id,
+                                        BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(service.addTaskAmount(id, teacherDto));
+    }
+
+    @PutMapping("/changeFirstName/{id}")
+    public ResponseEntity changeTeacherFirstName(@Valid @RequestBody TeacherDto teacherDto,
+                                                 @PathVariable Long id,
+                                                 BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeFirstName(id, teacherDto));
+    }
+
+    @PutMapping("/changeLastName/{id}")
+    public ResponseEntity changeTeacherLastName(@Valid @RequestBody TeacherDto teacherDto,
+                                                @PathVariable Long id,
+                                                BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeLastName(id, teacherDto));
     }
 }

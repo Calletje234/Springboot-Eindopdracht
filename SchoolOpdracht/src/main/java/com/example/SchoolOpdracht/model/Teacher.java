@@ -23,4 +23,7 @@ public class Teacher {
     @JsonIgnore
     private List<Task> tasks;
 
+    @OneToMany(mappedBy = "afwezigTeacher")
+    private List<Afwezig> afwezigheid;
+
 }
