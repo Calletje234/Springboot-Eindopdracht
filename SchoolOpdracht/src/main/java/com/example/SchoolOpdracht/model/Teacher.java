@@ -15,6 +15,8 @@ public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long teacherId;
+
+    // Variables not mapped by other services
     private String firstName;
     private String lastName;
     private int taskAmount;
@@ -26,4 +28,12 @@ public class Teacher {
     @OneToMany(mappedBy = "afwezigTeacher")
     private List<Afwezig> afwezigheid;
 
-}
+    // default constructor
+    public Teacher() {}
+
+    public Teacher(String firstName, String lastName, int taskAmount) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.taskAmount = taskAmount;
+    }
+ }

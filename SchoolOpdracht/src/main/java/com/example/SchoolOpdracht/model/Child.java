@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import net.bytebuddy.asm.Advice;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -15,6 +16,8 @@ public class Child {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long childId;
+
+    // Variables not mapped by other services
     private String firstName;
     private String lastName;
     private LocalDate dob;
@@ -30,4 +33,25 @@ public class Child {
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private Parent parent;
+
+    // default constructor
+    public Child() {}
+
+    public Child(String firstName,
+                 String lastName,
+                 LocalDate dob,
+                 String address,
+                 String countryOfOrigin,
+                 String spokenLanguage,
+                 ArrayList<String> allergies,
+                 LocalDate startingDate) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.dob = dob;
+        this.address = address;
+        this.countryOfOrigin = countryOfOrigin;
+        this.spokenLanguage = spokenLanguage;
+        this.Allergies = allergies;
+        this.startingDate = startingDate;
+    }
 }

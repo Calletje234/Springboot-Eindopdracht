@@ -15,11 +15,10 @@ public class MyUserDetailsService implements UserDetailsService {
     public MyUserDetailsService(UserRepository repos) {
         this.userRepos = repos;
     }
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> ou = userRepos.findById(username);
-        if(ou.isPresent()) {
+        if (ou.isPresent()) {
             User user = ou.get();
             return new MyUserDetails(user);
         }

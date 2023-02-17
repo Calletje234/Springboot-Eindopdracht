@@ -17,7 +17,6 @@ public class MyUserDetails implements UserDetails {
     public MyUserDetails(User user) {
         this.user = user;
     }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         List<GrantedAuthority> authorities = new ArrayList<>();
@@ -48,6 +47,7 @@ public class MyUserDetails implements UserDetails {
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
@@ -58,3 +58,4 @@ public class MyUserDetails implements UserDetails {
         return true;
     }
 }
+

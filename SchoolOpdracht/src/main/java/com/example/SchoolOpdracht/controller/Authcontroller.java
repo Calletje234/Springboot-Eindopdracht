@@ -30,6 +30,7 @@ public class AuthController {
     public ResponseEntity<Object> signIn(@RequestBody AuthDto authDto) {
         UsernamePasswordAuthenticationToken up =
                 new UsernamePasswordAuthenticationToken(authDto.username, authDto.password);
+
         try {
             Authentication auth = authManager.authenticate(up);
 

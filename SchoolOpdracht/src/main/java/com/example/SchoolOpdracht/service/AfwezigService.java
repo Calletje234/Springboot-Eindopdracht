@@ -8,6 +8,7 @@ import com.example.SchoolOpdracht.model.Afwezig;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 
 @Service
@@ -68,7 +69,7 @@ public class AfwezigService {
 
     public AfwezigDto changeTeacherId(Long id, AfwezigDto afwezigDto) {
         Afwezig afwezigToChange = getAfwezigRepos(id);
-        afwezigToChange.setTeacherId(afwezigDto.teacherId);
+        afwezigToChange.setAfwezigTeacher(afwezigDto.teacherId);
         repos.save(afwezigToChange);
         return createReturnDto(afwezigToChange);
     }

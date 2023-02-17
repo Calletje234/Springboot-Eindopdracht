@@ -14,6 +14,8 @@ public class Parent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long parentId;
+
+    // Variables not mapped by other services
     private String firstName;
     private String lastName;
     private String phoneNumber;
@@ -26,4 +28,21 @@ public class Parent {
 
     @OneToOne(mappedBy = "parent")
     private Task task;
+
+    // default constructor
+    public Parent() {}
+
+    public Parent(String firstName,
+                  String lastName,
+                  String phoneNumber,
+                  String address,
+                  String countryOfOrigin,
+                  String spokenLanguage) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.address = address;
+        this.countryOfOrigin = countryOfOrigin;
+        this.spokenLanguage = spokenLanguage;
+    }
 }

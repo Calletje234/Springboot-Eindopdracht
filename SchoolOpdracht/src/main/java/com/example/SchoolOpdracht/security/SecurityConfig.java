@@ -15,7 +15,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig  {
 
     private final JwtService jwtService;
     private final UserRepository userRepository;
@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .and()
                 .build();
     }
+
     @Bean
     public UserDetailsService userDetailsService() {
         return new MyUserDetailsService(this.userRepository);
@@ -56,6 +57,7 @@ public class SecurityConfig {
                 .addFilterBefore(new JwtRequestFilter(jwtService, userDetailsService()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+
         return http.build();
     }
 }

@@ -14,10 +14,20 @@ public class Opmerkingen {
     @Id
     @GeneratedValue
     private Long opmerkingenId;
+
+    // Variables not mapped by other services
     private LocalDate dateOfContact;
     private String opmerking;
 
     @ManyToOne
     @JoinColumn(name = "task_id")
     Task newTask;
+
+    // default constructor
+    public Opmerkingen() {}
+
+    public Opmerkingen(LocalDate dateOfContact, String opmerking) {
+        this.dateOfContact = dateOfContact;
+        this.opmerking = opmerking;
+    }
 }

@@ -15,7 +15,9 @@ public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long taskId;
-    private String Status;
+
+    // Variables not mapped by other services
+    private String status;
     private LocalDate dueDate;
 
     @ManyToOne
@@ -32,4 +34,12 @@ public class Task {
 
     @OneToMany(mappedBy = "newTask")
     private List<Opmerkingen> opmerkingen;
+
+    // default constructor
+    public Task() {}
+
+    public Task(String status, LocalDate dueDate) {
+        this.status = status;
+        this.dueDate = dueDate;
+    }
 }
