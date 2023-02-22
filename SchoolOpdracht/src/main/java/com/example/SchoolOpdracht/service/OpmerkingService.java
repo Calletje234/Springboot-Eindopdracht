@@ -5,7 +5,10 @@ import com.example.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Opmerkingen;
+import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.repository.OpmerkingenRepository;
+import com.example.SchoolOpdracht.repository.TaskRepository;
+
 import org.springframework.stereotype.Service;
 
 import javax.management.openmbean.OpenMBeanAttributeInfo;
@@ -15,13 +18,17 @@ import java.util.ArrayList;
 public class OpmerkingService {
 
     private final OpmerkingenRepository repos;
+    private final TaskRepository taskRepos;
 
     // constructor injection
-    public OpmerkingService(OpmerkingenRepository r) {this.repos = r;}
+    public OpmerkingService(OpmerkingenRepository r, TaskRepository t) {
+        this.repos = r;
+        this.taskRepos = t;
+    }
 
-    public Long createOpmerking(OpmerkingenDto opmerkingenDto) {
+    public Long createOpmerking(OpmerkingenDto opmerkingenDto, Long taskId) {
         Opmerkingen newOpmerking = new Opmerkingen();
-
+        
         // map dto to entity
         newOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
         newOpmerking.setOpmerking(opmerkingenDto.opmerking);
@@ -78,9 +85,18 @@ public class OpmerkingService {
 
     public OpmerkingenDto createReturnDto(Opmerkingen opmerking) {
         OpmerkingenDto requestDto = new OpmerkingenDto();
-        requestDto.taskId = opmerking.getTaskId();
         requestDto.dateOfContact = opmerking.getDateOfContact();
         requestDto.opmerking = opmerking.getOpmerking();
         return requestDto;
+    }
+
+    public Task getTaskRepos(Long id) {
+        Util.checkId(id, taskRepos);
+        return taskRepos.findById(id).get();
+    }
+
+    public Opmerkingen getOpmerkingRepos(Long id) {
+        Util.checkId(id, repos);
+        return repos.findById(id).get();
     }
 }

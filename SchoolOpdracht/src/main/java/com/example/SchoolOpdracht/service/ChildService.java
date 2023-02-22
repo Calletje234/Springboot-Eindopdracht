@@ -4,7 +4,9 @@ import com.example.SchoolOpdracht.dto.ChildDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.model.Parent;
 import com.example.SchoolOpdracht.repository.ChildRepository;
+import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
@@ -16,15 +18,18 @@ import java.util.ArrayList;
 public class ChildService {
     private final ChildRepository repos;
     private final TaskRepository taskRepos;
+    private final ParentRepository parentRepos;
 
-    public ChildService(ChildRepository c, TaskRepository t) {
+    public ChildService(ChildRepository c, TaskRepository t, ParentRepository p) {
         this.repos = c;
         this.taskRepos = t;
+        this.parentRepos = p;
     }
 
-    public Iterable<Long> createChild(ChildDto childDto) {
+    public Iterable<Long> createChild(ChildDto childDto, Long parentId) {
         Child newChild = new Child();
-        Task newTask = new Task();
+        Parent coupledParent = getParentRepos(parentId);
+        
 
         //map dto to entity
         newChild.setFirstName(childDto.firstName);
@@ -35,6 +40,7 @@ public class ChildService {
         newChild.setSpokenLanguage(childDto.spokenLanguage);
         newChild.setAllergies(childDto.Allergies);
         newChild.setCountryOfOrigin(childDto.countryOfOrigin);
+        newChild.setParent(coupledParent);
 
         Child savedChild = repos.save(newChild);
         Task savedTask = taskRepos.save(newTask);
@@ -118,9 +124,9 @@ public class ChildService {
         return createReturnDto(requestedChild);
     }
 
-    public ChildDto changeChangeParent(Long id, ChildDto childDto) {
+    public ChildDto changeParent(Long id, Long parentId) {
         Child requestedChild = getChildRepos(id);
-        requestedChild.setParentId(childDto.parentId);
+        requestedChild.setParent(getParentRepos(parentId));
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
@@ -141,6 +147,11 @@ public class ChildService {
     public Child getChildRepos(Long id) {
         Util.checkId(id, repos);
         return repos.findById(id).get();
+    }
+
+    public Parent getParentRepos(Long id) {
+        Util.checkId(id, parentRepos);
+        return parentRepos.findById(id).get();
     }
 
     public ChildDto removeChildById(Long id) {

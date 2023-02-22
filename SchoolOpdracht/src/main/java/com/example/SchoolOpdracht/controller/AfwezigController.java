@@ -33,7 +33,7 @@ public class AfwezigController {
 
     @PostMapping("")
     public ResponseEntity<String> createAfwezig(@Valid @RequestBody AfwezigDto afwezigDto, BindingResult br){
-        Long createdId = service.createAfwezigPeriod(afwezigDto);
+        Long createdId = service.createAfwezigPeriod(afwezigDto, Long teacherId);
 
         URI uri = URI.create(
                 ServletUriComponentsBuilder.

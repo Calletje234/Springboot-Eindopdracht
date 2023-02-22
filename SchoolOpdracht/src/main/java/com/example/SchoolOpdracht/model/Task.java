@@ -19,6 +19,7 @@ public class Task {
     // Variables not mapped by other services
     private String status;
     private LocalDate dueDate;
+    private boolean assigned;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
@@ -38,8 +39,9 @@ public class Task {
     // default constructor
     public Task() {}
 
-    public Task(String status, LocalDate dueDate) {
+    public Task(String status, LocalDate dueDate, boolean assigned) {
         this.status = status;
         this.dueDate = dueDate;
+        this.assigned = assigned;
     }
 }

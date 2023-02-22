@@ -5,6 +5,11 @@ import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.model.Child;
+import com.example.SchoolOpdracht.model.Parent;
+import com.example.SchoolOpdracht.repository.ChildRepository;
+import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
@@ -15,14 +20,18 @@ import java.util.ArrayList;
 public class TaskService {
     private final TaskRepository repos;
     private final TeacherRepository teacherRepos;
+    private final ChildRepository childRepos;
+    private final ParentRepository parentRepos;
 
     // constructor injection
-    public TaskService(TaskRepository r, TeacherRepository t) {
+    public TaskService(TaskRepository r, TeacherRepository t, ChildRepository c, ParentRepository p) {
         this.repos = r;
         this.teacherRepos = t;
+        this.childRepos = c;
+        this.parentRepos = p;
     }
 
-    public Long createTask(TaskDto taskDto) {
+    public Long createTask(TaskDto taskDto, Long childId, Long parentId, Long teacherId) {
         Task newTask = new Task();
 
         // map dto to entity
@@ -65,9 +74,9 @@ public class TaskService {
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
+    public TaskDto changeAssignedTeacher(Long taskId, Long teacherId,TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
-        taskToChange.setTeacherId(taskDto.teacherId);
+        taskToChange.setTeacher(getTeacherRepos(teacherId));
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
@@ -88,5 +97,20 @@ public class TaskService {
     public Task getTaskRepos(Long id) {
         Util.checkId(id, repos);
         return repos.findById(id).get();
+    }
+
+    public Teacher getTeacherRepos(Long id) {
+        Util.checkId(id, teacherRepos);
+        return teacherRepos.findById(id).get();
+    }
+
+    public Child getChildRepos(Long id) {
+        Util.checkId(id, childRepos);
+        return childRepos.findById(id).get();
+    }
+
+    public Parent getParentRepos(Long id) {
+        Util.checkId(id, parentRepos);
+        return parentRepos.findById(id).get();
     }
 }

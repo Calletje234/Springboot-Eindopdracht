@@ -1,16 +1,16 @@
 package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.TeacherDto;
-import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+// import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
-import javax.validation.constraints.Null;
+// import javax.validation.constraints.Null;
 import java.util.ArrayList;
 
-import static java.util.Objects.isNull;
+// import static java.util.Objects.isNull;
 
 @Service
 public class TeacherService {

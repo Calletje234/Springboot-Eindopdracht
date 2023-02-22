@@ -5,7 +5,10 @@ import com.example.SchoolOpdracht.dto.AfwezigDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Afwezig;
+import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
+import com.example.SchoolOpdracht.repository.TeacherRepository;
+
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -14,19 +17,23 @@ import java.util.ArrayList;
 @Service
 public class AfwezigService {
     private final AfwezigRepository repos;
+    private final TeacherRepository teacherRepos;
 
     //constructor injection
-    public AfwezigService(AfwezigRepository r) {
+    public AfwezigService(AfwezigRepository r, TeacherRepository tr) {
         this.repos = r;
+        this.teacherRepos = tr;
     }
 
-    public Long createAfwezigPeriod(AfwezigDto afwezigDto) {
+    public Long createAfwezigPeriod(AfwezigDto afwezigDto, Long teacherId) {
         Afwezig newAfwezig = new Afwezig();
+        Teacher teacherAfwezig = getTeacherRepos(teacherId);
 
         // map dto to entity
         newAfwezig.setReason(afwezigDto.reason);
         newAfwezig.setStartDate(afwezigDto.startDate);
         newAfwezig.setEndDate(afwezigDto.endDate);
+        newAfwezig.setAfwezigTeacher(teacherAfwezig);
 
         Afwezig savedAfwezig = repos.save(newAfwezig);
         return savedAfwezig.getAfwezigId();
@@ -93,4 +100,10 @@ public class AfwezigService {
         Util.checkId(id, repos);
         return repos.findById(id).get();
     }
+
+    public Teacher getTeacherRepos(Long id) {
+        Util.checkId(id, teacherRepos);
+        return teacherRepos.findById(id).get();
+    }
+
 }
