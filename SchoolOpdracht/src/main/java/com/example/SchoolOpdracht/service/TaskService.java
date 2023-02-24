@@ -6,15 +6,21 @@ import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.model.Afwezig;
 import com.example.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.model.Parent;
 import com.example.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
+
+import net.bytebuddy.asm.Advice.Local;
+
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class TaskService {
@@ -31,13 +37,14 @@ public class TaskService {
         this.parentRepos = p;
     }
 
-    public Long createTask(TaskDto taskDto, Long childId, Long parentId, Long teacherId) {
+    public Long createTask(TaskDto taskDto, Long childId, Long parentId) {
         Task newTask = new Task();
 
         // map dto to entity
         newTask.setDueDate(taskDto.dueDate);
 
         Task savedTask = repos.save(newTask);
+        
         return savedTask.getTaskId();
     }
 
@@ -92,6 +99,17 @@ public class TaskService {
         requestedDto.dueDate = changedModel.getDueDate();;
         requestedDto.status = changedModel.getStatus();
         return requestedDto;
+    }
+
+    public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {
+        Teacher teacherToAssign = getTeacherRepos(teacherId);
+        List<Afwezig> teacherAfwezigList = teacherToAssign.getAfwezigheid();
+        for (Afwezig afwezigList : teacherAfwezigList) {
+            if (dueDate.isAfter(afwezigList.getStartDate()) && dueDate.isBefore(afwezigList.getEndDate())) {
+                return false;
+            }
+        }
+        return true;
     }
 
     public Task getTaskRepos(Long id) {
