@@ -74,13 +74,6 @@ public class AfwezigService {
         return createReturnDto(afwezigToChange);
     }
 
-    public AfwezigDto changeTeacherId(Long id, AfwezigDto afwezigDto) {
-        Afwezig afwezigToChange = getAfwezigRepos(id);
-        afwezigToChange.setAfwezigTeacher(afwezigDto.teacherId);
-        repos.save(afwezigToChange);
-        return createReturnDto(afwezigToChange);
-    }
-
     public AfwezigDto deleteAfwezigById(Long id) {
         Afwezig deletedAfwezig = getAfwezigRepos(id);
         repos.deleteById(id);
@@ -90,7 +83,7 @@ public class AfwezigService {
     public AfwezigDto createReturnDto(Afwezig afwezigModel) {
         AfwezigDto requestedDto = new AfwezigDto();
         requestedDto.endDate = afwezigModel.getEndDate();
-        requestedDto.teacherId = afwezigModel.getTeacherId();
+        requestedDto.teacherId = afwezigModel.getAfwezigTeacher();
         requestedDto.reason = afwezigModel.getReason();
         requestedDto.startDate = afwezigModel.getStartDate();
         return requestedDto;

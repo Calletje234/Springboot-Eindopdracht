@@ -1,13 +1,12 @@
 package com.example.SchoolOpdracht.model;
 
 
-import com.example.SchoolOpdracht.dto.AfwezigDto;
 import lombok.Getter;
 import lombok.Setter;
-import net.bytebuddy.asm.Advice;
+
+import java.time.LocalDate;
 
 import javax.persistence.*;
-import java.time.LocalDate;
 
 @Entity
 @Table(name = "Afwezig")
