@@ -5,7 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.util.List;
+import java.util.ArrayList;
 
 @Entity
 @Table(name = "Teachers")
@@ -22,10 +22,10 @@ public class Teacher {
 
     @OneToMany(mappedBy = "teacher")
     @JsonIgnore
-    private List<Task> tasks;
+    private ArrayList<Task> tasks;
 
     @OneToMany(mappedBy = "afwezigTeacher")
-    private List<Afwezig> afwezigheid;
+    private ArrayList<Afwezig> afwezigheid;
 
     // default constructor
     public Teacher() {}

@@ -4,6 +4,7 @@ import com.example.SchoolOpdracht.dto.TeacherDto;
 // import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
@@ -48,13 +49,6 @@ public class TeacherService {
         return getReturnTeacherDto(requestedTeacher);
     }
 
-    public TeacherDto addTaskAmount(Long id, TeacherDto teacherDto) {
-        Teacher requestedTeacher = getTeacherRepos(id);
-        requestedTeacher.setTaskAmount(teacherDto.taskAmount);
-        repos.save(requestedTeacher);
-        return getReturnTeacherDto(requestedTeacher);
-    }
-
     public TeacherDto changeFirstName(Long id, TeacherDto teacherDto) {
         Teacher teacherToChange = getTeacherRepos(id);
         teacherToChange.setFirstName(teacherDto.firstName);
@@ -67,6 +61,17 @@ public class TeacherService {
         teacherToChange.setLastName(teacherDto.lastName);
         repos.save(teacherToChange);
         return getReturnTeacherDto(teacherToChange);
+    }
+
+    public TeacherDto addTaskToTeacher(Long id, Task taskToAdd) {
+        Teacher teacherForTaskAdd = getTeacherRepos(id);
+        ArrayList<Task> teacherTaskCopy = teacherForTaskAdd.getTasks();
+        int taskAmountCopy = teacherForTaskAdd.getTaskAmount();
+        teacherTaskCopy.add(taskToAdd);
+        teacherForTaskAdd.setTasks(teacherTaskCopy);
+        teacherForTaskAdd.setTaskAmount(taskAmountCopy + 1);
+        repos.save(teacherForTaskAdd);
+        return getReturnTeacherDto(teacherForTaskAdd);
     }
 
     public TeacherDto deleteTeacherById(Long id) {
