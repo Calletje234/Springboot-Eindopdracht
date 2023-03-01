@@ -5,6 +5,7 @@ import com.example.SchoolOpdracht.dto.TeacherDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ import java.util.ArrayList;
 public class TeacherService {
 
     private final TeacherRepository repos;
+    private final TaskRepository taskRepos;
 
     // constructor injection (instead of @Autowired)
-    public TeacherService(TeacherRepository r) {
+    public TeacherService(TeacherRepository r, TaskRepository t) {
         this.repos = r;
+        this.taskRepos = t;
     }
 
     public Long createTeacher(TeacherDto teacherDto) {
@@ -56,6 +59,23 @@ public class TeacherService {
         return getReturnTeacherDto(teacherToChange);
     }
 
+    public int getTaskAmount(Long id) {
+        Teacher requestedTeacher = getTeacherRepos(id);
+        return requestedTeacher.getTaskAmount();
+    }
+
+    public ArrayList<Task> getAllOpenTasks(Long id) {
+        Teacher requestedTeacher = getTeacherRepos(id);
+        ArrayList<Task> allTasks = requestedTeacher.getTasks();
+        ArrayList<Task> runningTasks = new ArrayList<>();
+        for (Task task : allTasks) {
+            if(task.getStatus() != "Running") {
+                runningTasks.add(task);
+            }
+        }
+        return runningTasks;
+    }
+
     public TeacherDto changeLastName(Long id, TeacherDto teacherDto) {
         Teacher teacherToChange = getTeacherRepos(id);
         teacherToChange.setLastName(teacherDto.lastName);
@@ -63,8 +83,9 @@ public class TeacherService {
         return getReturnTeacherDto(teacherToChange);
     }
 
-    public TeacherDto addTaskToTeacher(Long id, Task taskToAdd) {
+    public TeacherDto addTaskToTeacher(Long id, Long taskId) {
         Teacher teacherForTaskAdd = getTeacherRepos(id);
+        Task taskToAdd = getTaskRepos(taskId);
         ArrayList<Task> teacherTaskCopy = teacherForTaskAdd.getTasks();
         int taskAmountCopy = teacherForTaskAdd.getTaskAmount();
         teacherTaskCopy.add(taskToAdd);
@@ -91,6 +112,11 @@ public class TeacherService {
     public Teacher getTeacherRepos(Long id) {
         Util.checkId(id, repos);
         return repos.findById(id).get();
+    }
+
+    public Task getTaskRepos(Long id) {
+        Util.checkId(id, taskRepos);
+        return taskRepos.findById(id).get();
     }
 
 }

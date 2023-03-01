@@ -54,13 +54,13 @@ public class TeacherController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity addTaskAmount(@Valid @RequestBody TeacherDto teacherDto,
+    public ResponseEntity addTaskAmount(@Valid @RequestBody Long taskId,
                                         @PathVariable Long id,
                                         BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(service.addTaskAmount(id, teacherDto));
+        return ResponseEntity.ok(service.addTaskToTeacher(id, taskId));
     }
 
     @PutMapping("/changeFirstName/{id}")
