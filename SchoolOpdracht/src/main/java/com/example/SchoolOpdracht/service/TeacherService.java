@@ -1,10 +1,13 @@
 package com.example.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.dto.TeacherDto;
 // import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.model.Child;
+import com.example.SchoolOpdracht.model.Parent;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import org.springframework.stereotype.Service;
@@ -64,16 +67,23 @@ public class TeacherService {
         return requestedTeacher.getTaskAmount();
     }
 
-    public ArrayList<Task> getAllOpenTasks(Long id) {
+    public ArrayList<TaskDto> getTasksWithStatus(Long id, String status) {
         Teacher requestedTeacher = getTeacherRepos(id);
-        ArrayList<Task> allTasks = requestedTeacher.getTasks();
-        ArrayList<Task> runningTasks = new ArrayList<>();
-        for (Task task : allTasks) {
-            if(task.getStatus() != "Running") {
-                runningTasks.add(task);
+        ArrayList<Task> allTask = requestedTeacher.getTasks();
+        ArrayList<TaskDto> allTaskDto = new ArrayList<>();
+        for(Task task : allTask) {
+            if(status == "running" && task.getStatus() == "running") {
+                TaskDto retrievedTask = getTaskDto(task);
+                allTaskDto.add(retrievedTask);
+            } else if(status == "closed" && task.getStatus() == "closed") {
+                TaskDto retrievedTask = getTaskDto(task);
+                allTaskDto.add(retrievedTask);
+            } else {
+                TaskDto retrieveTask = getTaskDto(task);
+                allTaskDto.add(retrieveTask);
             }
         }
-        return runningTasks;
+        return allTaskDto;
     }
 
     public TeacherDto changeLastName(Long id, TeacherDto teacherDto) {
@@ -106,7 +116,20 @@ public class TeacherService {
         requestDto.firstName = changedModel.getFirstName();
         requestDto.lastName = changedModel.getLastName();
         requestDto.taskAmount = changedModel.getTaskAmount();
+        requestDto.tasks = changedModel.getTasks();
         return requestDto;
+    }
+
+    public TaskDto getTaskDto(Task taskModel) {
+        TaskDto dtoToCreate = new TaskDto();
+        Child coupledChild = taskModel.getChild();
+        Parent coupledParent = taskModel.getParent();
+        dtoToCreate.childId = coupledChild.getChildId();
+        dtoToCreate.parentId = coupledParent.getParentId();
+        dtoToCreate.dueDate = taskModel.getDueDate();
+        dtoToCreate.status = taskModel.getStatus();
+        dtoToCreate.teacherId = taskModel.getTaskId();
+        return dtoToCreate;
     }
 
     public Teacher getTeacherRepos(Long id) {
@@ -118,5 +141,4 @@ public class TeacherService {
         Util.checkId(id, taskRepos);
         return taskRepos.findById(id).get();
     }
-
 }

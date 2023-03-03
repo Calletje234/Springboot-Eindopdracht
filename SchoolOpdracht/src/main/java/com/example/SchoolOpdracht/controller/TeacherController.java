@@ -1,9 +1,12 @@
 package com.example.SchoolOpdracht.controller;
 
 import com.example.SchoolOpdracht.dto.TeacherDto;
+import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.service.TeacherService;
+
+import org.apache.catalina.connector.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
@@ -13,6 +16,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.naming.Binding;
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.net.URI;
 
 @RestController
@@ -32,6 +36,11 @@ public class TeacherController {
     @GetMapping("/{id}")
     public ResponseEntity<TeacherDto> getTeacherById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getTeacherById(id));
+    }
+
+    @GetMapping("/getTasks/{id}")
+    public ResponseEntity<ArrayList<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestBody String taskStatus) {
+        return ResponseEntity.ok(service.getTasksWithStatus(id, taskStatus));
     }
 
     @PostMapping("")
