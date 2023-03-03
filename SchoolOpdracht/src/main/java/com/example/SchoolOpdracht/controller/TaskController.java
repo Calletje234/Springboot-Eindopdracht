@@ -30,6 +30,16 @@ public class TaskController {
         return ResponseEntity.ok(service.getTaskById(id));
     }
 
+    @GetMapping("/checkDueDate/{id}")
+    public ResponseEntity<Boolean> checkIfTaskIsOverdue(@PathVariable Long id) {
+        return ResponseEntity.ok(service.checkIfTaskIsOverdue(id));
+    }
+
+    @GetMapping("/daysBeforeOverDue/{id}")
+    public ResponseEntity<Integer> getAmountOfDays(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getDayBeforeOverdue(id));
+    }
+
     @PostMapping("")
     public ResponseEntity<String> createTask(@Valid @RequestBody TaskDto taskDto, BindingResult br) {
         if(br.hasErrors()) {
