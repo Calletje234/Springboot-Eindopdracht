@@ -25,6 +25,7 @@ import static org.assertj.core.internal.bytebuddy.matcher.ElementMatchers.is;
 @WebMvcTest(AfwezigController.class)
 class AfwezigControllerTest {
     public AfwezigDto afto;
+    public AfwezigDto reasonto;
 
     @Autowired
     MockMvc mockMvc;
@@ -41,6 +42,11 @@ class AfwezigControllerTest {
         this.afto.endDate = LocalDate.of(2023, 10, 15);
         this.afto.reason = "Vacation";
         this.afto.teacherId = 123456L;
+
+        this.reasonto.startDate = LocalDate.of(2023, 10, 5);
+        this.reasonto.endDate = LocalDate.of(2023, 10, 15);
+        this.reasonto.reason = "Sick";
+        this.reasonto.teacherId = 123456L;
     }
 
     @Test
@@ -56,6 +62,24 @@ class AfwezigControllerTest {
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.startDate", is(LocalDate.of(2023, 10, 5))))
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.endDate", is(LocalDate.of(2023, 10, 15))))
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.reason", is("Vacation")))
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.teacherId", is(123456L)));
+    }
+
+    @Test
+    @WithMockUser(username="testuser", roles="USER")
+    void changeReason() throws Exception {
+        
+        String newReason = "Sick with Fever";
+
+        Mockito.when(afwezigService.changeReasonAfwezig(123L, newReason)).thenReturn(this.reasonto);
+
+        this.mockMvc
+                .perform(MockMvcRequestBuilders.get("/afwezig/123"))
+                .andDo(MockMvcResultHandlers.print())
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.startDate", is(LocalDate.of(2023, 10, 5))))
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.endDate", is(LocalDate.of(2023, 10, 15))))
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.reason", is(newReason)))
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.teacherId", is(123456L)));
     }
 }
