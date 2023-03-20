@@ -129,7 +129,7 @@ public class ChildController {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(service.changeChangeParent(id, childDto));
+        return ResponseEntity.ok(service.changeParent(id, childDto));
     }
 
     @DeleteMapping("/{id}")

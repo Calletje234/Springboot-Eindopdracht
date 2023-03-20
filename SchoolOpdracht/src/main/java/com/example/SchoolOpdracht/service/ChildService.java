@@ -26,9 +26,8 @@ public class ChildService {
         this.parentRepos = p;
     }
 
-    public Iterable<Long> createChild(ChildDto childDto, Long parentId) {
+    public Iterable<Long> createChild(ChildDto childDto) {
         Child newChild = new Child();
-        Parent coupledParent = getParentRepos(parentId);
         
 
         //map dto to entity
@@ -40,7 +39,7 @@ public class ChildService {
         newChild.setSpokenLanguage(childDto.spokenLanguage);
         newChild.setAllergies(childDto.Allergies);
         newChild.setCountryOfOrigin(childDto.countryOfOrigin);
-        newChild.setParent(coupledParent);
+        newChild.setParent(getParentRepos(childDto.parentId));
 
         Child savedChild = repos.save(newChild);
         Task savedTask = taskRepos.save(newTask);
@@ -124,15 +123,16 @@ public class ChildService {
         return createReturnDto(requestedChild);
     }
 
-    public ChildDto changeParent(Long id, Long parentId) {
+    public ChildDto changeParent(Long id, ChildDto childDto) {
         Child requestedChild = getChildRepos(id);
-        requestedChild.setParent(getParentRepos(parentId));
+        requestedChild.setParent(getParentRepos(childDto.parentId));
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto createReturnDto(Child childModel) {
         ChildDto requestDto = new ChildDto();
+        requestDto.parentId = childModel.getParentId();
         requestDto.firstName = childModel.getFirstName();
         requestDto.lastName = childModel.getLastName();
         requestDto.address = childModel.getAddress();
@@ -144,6 +144,13 @@ public class ChildService {
         return requestDto;
     }
 
+    public ChildDto removeChildById(Long id) {
+        Util.checkId(id, repos);
+        Child deletedChild = getChildRepos(id);
+        repos.deleteById(id);
+        return createReturnDto(deletedChild);
+    }
+
     public Child getChildRepos(Long id) {
         Util.checkId(id, repos);
         return repos.findById(id).get();
@@ -152,12 +159,5 @@ public class ChildService {
     public Parent getParentRepos(Long id) {
         Util.checkId(id, parentRepos);
         return parentRepos.findById(id).get();
-    }
-
-    public ChildDto removeChildById(Long id) {
-        Util.checkId(id, repos);
-        Child deletedChild = getChildRepos(id);
-        repos.deleteById(id);
-        return createReturnDto(deletedChild);
     }
 }
