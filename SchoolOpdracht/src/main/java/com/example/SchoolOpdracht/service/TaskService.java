@@ -1,6 +1,8 @@
 package com.example.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.dto.ChildDto;
+import com.example.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
@@ -37,11 +39,12 @@ public class TaskService {
         this.parentRepos = p;
     }
 
-    public Long createTask(TaskDto taskDto, Long childId, Long parentId) {
+    public Long createTask(TaskDto taskDto) {
         Task newTask = new Task();
 
         // map dto to entity
         newTask.setDueDate(taskDto.dueDate);
+        newTask.setChildId(taskDto.childId);
 
         Task savedTask = repos.save(newTask);
         
@@ -81,9 +84,9 @@ public class TaskService {
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeAssignedTeacher(Long taskId, Long teacherId,TaskDto taskDto) {
+    public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
-        taskToChange.setTeacher(getTeacherRepos(teacherId));
+        taskToChange.setTeacher(getTeacherRepos(taskDto.teacherId));
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
@@ -94,11 +97,47 @@ public class TaskService {
         return createReturnDto(deletedTask);
     }
 
+    public ChildDto getChildInformation(Long taskId) {
+        Task requestedTask = getTaskRepos(taskId);
+        return createChildReturnDto(getChildRepos(requestedTask.getChildId()));
+    }
+
+    public ParentDto getParentOfTaskChild(Long taskId) {
+        Task requestedTask = getTaskRepos(taskId);
+        return createParentReturnDto(requestedTask.getChild().getParent());
+    }
+
     public TaskDto createReturnDto(Task changedModel) {
         TaskDto requestedDto = new TaskDto();
         requestedDto.dueDate = changedModel.getDueDate();;
         requestedDto.status = changedModel.getStatus();
         return requestedDto;
+    }
+
+    public ParentDto createParentReturnDto(Parent parentModel) {
+        ParentDto parentDto = new ParentDto();
+        parentDto.firstName = parentModel.getFirstName();
+        parentDto.lastName = parentModel.getLastName();
+        parentDto.address = parentModel.getAddress();
+        parentDto.countryOfOrigin = parentModel.getCountryOfOrigin();
+        parentDto.spokenLanguage = parentModel.getSpokenLanguage();
+        parentDto.phoneNumber = parentModel.getPhoneNumber();
+        parentDto.childList = parentModel.getChildren();
+        return parentDto;
+    }
+
+    public ChildDto createChildReturnDto(Child childModel) {
+        ChildDto childDto = new ChildDto();
+        childDto.firstName = childModel.getFirstName();
+        childDto.lastName = childModel.getLastName();
+        childDto.dob = childModel.getDob();
+        childDto.address = childModel.getAddress();
+        childDto.startingDate = childModel.getStartingDate();
+        childDto.countryOfOrigin = childModel.getCountryOfOrigin();
+        childDto.spokenLanguage = childModel.getSpokenLanguage();
+        childDto.Allergies = childModel.getAllergies();
+        childDto.parentId = childModel.getParent().getParentId();
+        return childDto;
     }
 
     public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {

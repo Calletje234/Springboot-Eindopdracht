@@ -8,8 +8,6 @@ public class TaskDto {
     public LocalDate dueDate;
     @NotBlank
     public Long childId;
-    @NotBlank
-    public Long parentId;
     public Long teacherId;
     public String status;
 }

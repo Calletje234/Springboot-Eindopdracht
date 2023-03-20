@@ -21,6 +21,9 @@ public class Task {
     private LocalDate dueDate;
     private boolean assigned;
 
+    private Long teacherId;
+    private Long childId;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
@@ -28,10 +31,6 @@ public class Task {
     @OneToOne
     @JoinColumn(name = "child_id")
     private Child child;
-
-    @OneToOne
-    @JoinColumn(name = "parent_id")
-    private Parent parent;
 
     @OneToMany(mappedBy = "newTask")
     private List<Opmerkingen> opmerkingen;

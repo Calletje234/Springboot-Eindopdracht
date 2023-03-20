@@ -1,9 +1,11 @@
 package com.example.SchoolOpdracht.dto;
 
+import com.example.SchoolOpdracht.model.Child;
+
 import javax.validation.constraints.NotBlank;
+import java.util.List;
 
 public class ParentDto {
-    public Long childId;
     @NotBlank
     public String firstName;
     @NotBlank
@@ -15,4 +17,5 @@ public class ParentDto {
     public String countryOfOrigin;
     @NotBlank
     public String spokenLanguage;
+    public List<Child> childList;
 }
