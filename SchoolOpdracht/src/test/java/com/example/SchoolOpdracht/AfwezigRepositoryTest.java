@@ -3,13 +3,20 @@ package com.example.SchoolOpdracht;
 import java.time.LocalDate;
 
 import org.junit.jupiter.api.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import com.example.SchoolOpdracht.model.Afwezig;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.junit4.SpringRunner;
 
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+@RunWith(SpringRunner.class)
+@SpringBootTest
 @DataJpaTest
 class AfwezigRepositoryTest {
     @Autowired
@@ -19,15 +26,16 @@ class AfwezigRepositoryTest {
     private AfwezigRepository afwezigRepository;
 
     @Test
-    void testFindByReason() {
+    void testIdGetsAssigned() {
 
-        //given
+        //adds the Model to the Database.
         LocalDate startDate = LocalDate.now(); 
         LocalDate endDate = LocalDate.now().plusDays(30L);
         Afwezig afwezig = new Afwezig("Vacation", startDate, endDate);
-        entityManager.persist(afwezig);
+        afwezigRepository.save(afwezig);
+        entityManager.flush();
 
-        //when
-        
+        //checks if an ID is being given back
+        assertNotNull(afwezig.getAfwezigId());
     }
 }

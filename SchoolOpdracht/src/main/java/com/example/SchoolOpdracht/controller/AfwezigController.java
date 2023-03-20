@@ -73,16 +73,6 @@ public class AfwezigController {
         return ResponseEntity.ok(service.changeStartingDate(id, afwezigDto));
     }
 
-    @PostMapping("/changeTeacherId/{id}")
-    public ResponseEntity changeTeacherId(@Valid @RequestBody AfwezigDto afwezigDto,
-                                          @PathVariable Long id,
-                                          BindingResult br) {
-        if(br.hasErrors()) {
-            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(service.changeTeacherId(id, afwezigDto));
-     }
-
     @DeleteMapping("/{id}")
     public ResponseEntity<AfwezigDto> deleteAfwezigById(@PathVariable Long id) {
         return ResponseEntity.ok(service.deleteAfwezigById(id));

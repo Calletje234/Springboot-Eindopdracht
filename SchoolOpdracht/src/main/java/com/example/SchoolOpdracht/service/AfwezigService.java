@@ -25,15 +25,14 @@ public class AfwezigService {
         this.teacherRepos = tr;
     }
 
-    public Long createAfwezigPeriod(AfwezigDto afwezigDto, Long teacherId) {
+    public Long createAfwezigPeriod(AfwezigDto afwezigDto) {
         Afwezig newAfwezig = new Afwezig();
-        Teacher teacherAfwezig = getTeacherRepos(teacherId);
 
         // map dto to entity
         newAfwezig.setReason(afwezigDto.reason);
         newAfwezig.setStartDate(afwezigDto.startDate);
         newAfwezig.setEndDate(afwezigDto.endDate);
-        newAfwezig.setAfwezigTeacher(teacherAfwezig);
+        newAfwezig.setAfwezigTeacher(getTeacherRepos(afwezigDto.teacherId));
 
         Afwezig savedAfwezig = repos.save(newAfwezig);
         return savedAfwezig.getAfwezigId();
@@ -83,7 +82,7 @@ public class AfwezigService {
     public AfwezigDto createReturnDto(Afwezig afwezigModel) {
         AfwezigDto requestedDto = new AfwezigDto();
         requestedDto.endDate = afwezigModel.getEndDate();
-        requestedDto.teacherId = afwezigModel.getAfwezigTeacher();
+        requestedDto.teacherId = afwezigModel.getAfwezigTeacher().getTeacherId();
         requestedDto.reason = afwezigModel.getReason();
         requestedDto.startDate = afwezigModel.getStartDate();
         return requestedDto;
