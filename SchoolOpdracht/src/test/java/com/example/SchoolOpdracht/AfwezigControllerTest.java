@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht;
 
 import com.example.SchoolOpdracht.controller.AfwezigController;
 import com.example.SchoolOpdracht.dto.AfwezigDto;
+import com.example.SchoolOpdracht.security.JwtService;
 import com.example.SchoolOpdracht.service.AfwezigService;
 import net.bytebuddy.asm.Advice;
 import org.junit.jupiter.api.BeforeEach;
