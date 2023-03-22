@@ -16,18 +16,18 @@ import java.net.URI;
 @RestController
 @RequestMapping("/tasks")
 public class TaskController {
-    private final TaskService service;
+    private final TaskService taskService;
 
     public TaskController(TaskService t) {
         this.service = t;
     }
 
     @GetMapping("")
-    public ResponseEntity<Iterable<TaskDto>> getAllTasks() {return ResponseEntity.ok(service.getAllTask());}
+    public ResponseEntity<Iterable<TaskDto>> getAllTasks() {return ResponseEntity.ok(taskService.getAllTask());}
 
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.getTaskById(id));
+        return ResponseEntity.ok(taskService.getTaskById(id));
     }
 
     @PostMapping("")
@@ -35,7 +35,7 @@ public class TaskController {
         if(br.hasErrors()) {
             return new ResponseEntity<>(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        Long createdId = service.createTask(taskDto);
+        Long createdId = taskService.createTask(taskDto);
 
         URI uri = URI.create(
                 ServletUriComponentsBuilder.fromCurrentContextPath().path("/tasks/" + createdId).toUriString());
@@ -47,7 +47,7 @@ public class TaskController {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(service.changeAssignedTeacher(id, taskDto));
+        return ResponseEntity.ok(taskService.changeAssignedTeacher(id, taskDto));
     }
 
     @PutMapping("/updateStatus/{id}")
@@ -55,7 +55,7 @@ public class TaskController {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(service.changeTaskStatus(id, taskDto));
+        return ResponseEntity.ok(taskService.changeTaskStatus(id, taskDto));
     }
 
     @PutMapping("/updateDueDate/{id}")
@@ -63,11 +63,11 @@ public class TaskController {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(service.changeDueDate(id, taskDto));
+        return ResponseEntity.ok(taskService.changeDueDate(id, taskDto));
     }
 
     @DeleteMapping("/${id}")
     public ResponseEntity deleteTask(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteTaskById(id));
+        return ResponseEntity.ok(taskService.deleteTaskById(id));
     }
 }

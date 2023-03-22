@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.dto;
 
 import javax.validation.constraints.NotBlank;
+
 import java.time.LocalDate;
 
 public class TaskDto {
@@ -8,6 +9,6 @@ public class TaskDto {
     public LocalDate dueDate;
     @NotBlank
     public Long childId;
-    public Long teacherId;
+    public Long teacherId = null;
     public String status;
 }

@@ -24,6 +24,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.validation.constraints.Null;
+
 @Service
 public class TaskService {
     private final TaskRepository repos;
@@ -44,7 +46,10 @@ public class TaskService {
 
         // map dto to entity
         newTask.setDueDate(taskDto.dueDate);
-        newTask.setChildId(taskDto.childId);
+        newTask.setChild(getChildRepos(taskDto.childId));
+        if(taskDto.teacherId != null) {
+            newTask.setTeacher(getTeacherRepos(taskDto.teacherId));
+        }
 
         Task savedTask = repos.save(newTask);
         
