@@ -2,7 +2,7 @@ package com.example.SchoolOpdracht.service;
 
 
 import com.example.SchoolOpdracht.dto.TaskDto;
-import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.dto.TeacherDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.model.Teacher;
@@ -14,11 +14,10 @@ import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 
-import net.bytebuddy.asm.Advice.Local;
-
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,6 +66,12 @@ public class TaskService {
         return requestedTaskDto;
         }
 
+    public TeacherDto getAssignedTeacher(Long id, Long teacherId) {
+        Task requestedTask = getTaskRepos(id);
+        Teacher teacherAssignedToTask = requestedTask.getTeacher();
+        return createTeacherDto(teacherAssignedToTask);
+    }
+
     public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
         taskToChange.setStatus(taskDto.status);
@@ -101,6 +106,25 @@ public class TaskService {
         return requestedDto;
     }
 
+    public int getDayBeforeOverdue(Long id) {
+        Task taskToCheck = getTaskRepos(id);
+        LocalDate taskDueDate = taskToCheck.getDueDate();
+        LocalDate todaysDate = LocalDate.now();
+        Period period = Period.between(taskDueDate, todaysDate);
+        return period.getDays();
+    }
+
+    public Boolean checkIfTaskIsOverdue(Long id) {
+        Task taskToCheck = getTaskRepos(id);
+        LocalDate tasksDueDate = taskToCheck.getDueDate();
+        LocalDate todaysDate = LocalDate.now();
+        if(todaysDate.isBefore(tasksDueDate)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {
         Teacher teacherToAssign = getTeacherRepos(teacherId);
         List<Afwezig> teacherAfwezigList = teacherToAssign.getAfwezigheid();
@@ -110,6 +134,14 @@ public class TaskService {
             }
         }
         return true;
+    }
+
+    public TeacherDto createTeacherDto(Teacher teacherModel) {
+        TeacherDto teacherDto = new TeacherDto();
+        teacherDto.firstName = teacherModel.getFirstName();
+        teacherDto.lastName = teacherModel.getLastName();
+        teacherDto.taskAmount = teacherModel.getTaskAmount();
+        return teacherDto;
     }
 
     public Task getTaskRepos(Long id) {
