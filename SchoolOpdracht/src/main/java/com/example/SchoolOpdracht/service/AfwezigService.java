@@ -52,9 +52,9 @@ public class AfwezigService {
         return createReturnDto(requestedAfwezig);
     }
 
-    public AfwezigDto changeReasonAfwezig(Long id, String newReason) {
+    public AfwezigDto changeReasonAfwezig(Long id, AfwezigDto afwezigDto) {
         Afwezig afwezigToChange = getAfwezigRepos(id);
-        afwezigToChange.setReason(newReason);
+        afwezigToChange.setReason(afwezigDto.reason);
         repos.save(afwezigToChange);
         return createReturnDto(afwezigToChange);
     }
