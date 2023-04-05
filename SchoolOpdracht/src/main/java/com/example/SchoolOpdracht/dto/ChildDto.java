@@ -7,8 +7,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 
 public class ChildDto {
+    @NotBlank
     public Long parentId;
-    public Long taskId;
     @NotBlank
     public String firstName;
     @NotBlank
