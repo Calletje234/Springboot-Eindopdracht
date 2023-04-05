@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.dto.ChildDto;
+import com.example.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.model.Task;
@@ -17,18 +18,17 @@ import java.util.ArrayList;
 @Service
 public class ChildService {
     private final ChildRepository repos;
-    private final TaskRepository taskRepos;
     private final ParentRepository parentRepos;
+    private final TaskService taskService;
 
-    public ChildService(ChildRepository c, TaskRepository t, ParentRepository p) {
+    public ChildService(ChildRepository c, ParentRepository p, TaskService s) {
         this.repos = c;
-        this.taskRepos = t;
         this.parentRepos = p;
+        this.taskService = s;
     }
 
     public Iterable<Long> createChild(ChildDto childDto) {
         Child newChild = new Child();
-        
 
         //map dto to entity
         newChild.setFirstName(childDto.firstName);
@@ -42,11 +42,12 @@ public class ChildService {
         newChild.setParent(getParentRepos(childDto.parentId));
 
         Child savedChild = repos.save(newChild);
-        Task savedTask = taskRepos.save(newTask);
+
+        Long savedTask = createTask(childDto, savedChild.getChildId());
 
         ArrayList<Long> idList = new ArrayList<>();
         idList.add(savedChild.getChildId());
-        idList.add(savedTask.getTaskId());
+        idList.add(savedTask);
 
         return idList;
     }
@@ -128,6 +129,16 @@ public class ChildService {
         requestedChild.setParent(getParentRepos(childDto.parentId));
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
+    }
+
+    public Long createTask(ChildDto childDto, Long childId) {
+        TaskDto taskDto = new TaskDto();
+        taskDto.childId = childId;
+        taskDto.dueDate = (Util.calculateDueDate(childDto.dob));
+        taskDto.status = "new";
+        taskDto.parentId = childDto.parentId;
+
+        return taskService.createTask(taskDto);
     }
 
     public ChildDto createReturnDto(Child childModel) {

@@ -1,9 +1,12 @@
 package com.example.SchoolOpdracht.helpers;
 
 import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
+import net.bytebuddy.asm.Advice;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+
+import java.time.LocalDate;
 
 
 public class Util{
@@ -23,5 +26,14 @@ public class Util{
             sb.append("\n");
         }
         return sb.toString();
+    }
+
+    public static LocalDate calculateDueDate(LocalDate birthDateChild) {
+        LocalDate startingDate = calculateStartDate(birthDateChild);
+        return startingDate.plusWeeks(6);
+    }
+
+    public static LocalDate calculateStartDate(LocalDate dateToCalculate) {
+        return dateToCalculate.withYear(LocalDate.now().getYear());
     }
 }

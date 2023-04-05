@@ -36,7 +36,7 @@ public class TaskService {
         this.parentRepos = p;
     }
 
-    public Long createTask(TaskDto taskDto, Long childId, Long parentId) {
+    public Long createTask(TaskDto taskDto) {
         Task newTask = new Task();
 
         // map dto to entity
