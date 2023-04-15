@@ -48,16 +48,6 @@ public class OpmerkingController {
         return ResponseEntity.ok(service.deleteOpmerkingById(id));
     }
 
-    @PutMapping("/changeTask/{id}")
-    public ResponseEntity updateOpmerkingById(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
-                                                              @PathVariable Long id,
-                                                              BindingResult br) {
-        if (br.hasErrors()) {
-            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(service.changeTaskId(id, opmerkingenDto));
-    }
-
     @PutMapping("/changeOpmerking/{id}")
     public ResponseEntity changeOpmerking(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
                                           @PathVariable Long id,

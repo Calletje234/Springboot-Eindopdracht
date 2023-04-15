@@ -26,7 +26,7 @@ public class OpmerkingService {
         this.taskRepos = t;
     }
 
-    public Long createOpmerking(OpmerkingenDto opmerkingenDto, Long taskId) {
+    public Long createOpmerking(OpmerkingenDto opmerkingenDto) {
         Opmerkingen newOpmerking = new Opmerkingen();
         
         // map dto to entity
@@ -64,14 +64,6 @@ public class OpmerkingService {
         Util.checkId(id, repos);
         Opmerkingen requestOpmerking = repos.findById(id).get();
         requestOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
-        repos.save(requestOpmerking);
-        return createReturnDto(requestOpmerking);
-    }
-
-    public OpmerkingenDto changeTaskId(Long id, OpmerkingenDto opmerkingenDto) {
-        Util.checkId(id, repos);
-        Opmerkingen requestOpmerking = repos.findById(id).get();
-        requestOpmerking.setTaskId(opmerkingenDto.taskId);
         repos.save(requestOpmerking);
         return createReturnDto(requestOpmerking);
     }
