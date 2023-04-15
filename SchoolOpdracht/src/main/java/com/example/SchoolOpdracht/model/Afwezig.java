@@ -22,7 +22,7 @@ public class Afwezig {
     private LocalDate endDate;
 
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacherId")
     Teacher afwezigTeacher;
 
     // default constructor

@@ -26,9 +26,6 @@ public class Parent {
     @OneToMany(mappedBy = "parent")
     private List<Child> children;
 
-    @OneToOne(mappedBy = "parent")
-    private Task task;
-
     // default constructor
     public Parent() {}
 

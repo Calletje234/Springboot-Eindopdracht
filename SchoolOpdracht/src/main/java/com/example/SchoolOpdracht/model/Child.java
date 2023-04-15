@@ -32,7 +32,7 @@ public class Child {
     private Task task;
 
     @ManyToOne
-    @JoinColumn(name = "parent_id")
+    @JoinColumn(name = "parentId")
     private Parent parent;
 
     // default constructor

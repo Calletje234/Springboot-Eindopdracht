@@ -23,15 +23,12 @@ public class Task {
     private LocalDate dueDate;
     private boolean assigned;
 
-    private Long teacherId;
-    private Long childId;
-
     @ManyToOne
-    @JoinColumn(name = "teacher_id")
+    @JoinColumn(name = "teacherId")
     private Teacher teacher;
 
     @OneToOne
-    @JoinColumn(name = "child_id")
+    @JoinColumn(name = "childId")
     private Child child;
 
     @OneToMany(mappedBy = "newTask")

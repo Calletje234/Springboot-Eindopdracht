@@ -18,6 +18,7 @@ import javax.naming.Binding;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/teachers")
@@ -39,7 +40,7 @@ public class TeacherController {
     }
 
     @GetMapping("/getTasks/{id}")
-    public ResponseEntity<ArrayList<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestBody String taskStatus) {
+    public ResponseEntity<List<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestBody String taskStatus) {
         return ResponseEntity.ok(service.getTasksWithStatus(id, taskStatus));
     }
 

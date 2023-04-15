@@ -105,7 +105,7 @@ public class TaskService {
 
     public ChildDto getChildInformation(Long taskId) {
         Task requestedTask = getTaskRepos(taskId);
-        return createChildReturnDto(getChildRepos(requestedTask.getChildId()));
+        return createChildReturnDto(getChildRepos(requestedTask.getChild().getChildId()));
     }
 
     public ParentDto getParentOfTaskChild(Long taskId) {

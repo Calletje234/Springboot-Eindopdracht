@@ -20,7 +20,7 @@ public class Opmerkingen {
     private String opmerking;
 
     @ManyToOne
-    @JoinColumn(name = "task_id")
+    @JoinColumn(name = "taskId")
     Task newTask;
 
     // default constructor
