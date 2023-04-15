@@ -123,9 +123,7 @@ public class TeacherService {
     public TaskDto getTaskDto(Task taskModel) {
         TaskDto dtoToCreate = new TaskDto();
         Child coupledChild = taskModel.getChild();
-        Parent coupledParent = taskModel.getParent();
         dtoToCreate.childId = coupledChild.getChildId();
-        dtoToCreate.parentId = coupledParent.getParentId();
         dtoToCreate.dueDate = taskModel.getDueDate();
         dtoToCreate.status = taskModel.getStatus();
         dtoToCreate.teacherId = taskModel.getTaskId();

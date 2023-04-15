@@ -136,7 +136,6 @@ public class ChildService {
         taskDto.childId = childId;
         taskDto.dueDate = (Util.calculateDueDate(childDto.dob));
         taskDto.status = "new";
-        taskDto.parentId = childDto.parentId;
 
         return taskService.createTask(taskDto);
     }
