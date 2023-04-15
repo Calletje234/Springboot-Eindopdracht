@@ -71,12 +71,12 @@ public class TeacherService {
     public List<TaskDto> getTasksWithStatus(Long id, String status) {
         Teacher requestedTeacher = getTeacherRepos(id);
         List<Task> allTask = requestedTeacher.getTasks();
-        List<TaskDto> allTaskDto = new List<>();
+        List<TaskDto> allTaskDto = new ArrayList<>();
         for(Task task : allTask) {
-            if(status == "running" && task.getStatus() == "running") {
+            if(status.equals("running") && task.getStatus().equals("running")) {
                 TaskDto retrievedTask = getTaskDto(task);
                 allTaskDto.add(retrievedTask);
-            } else if(status == "closed" && task.getStatus() == "closed") {
+            } else if(status.equals("closed") && task.getStatus().equals("closed")) {
                 TaskDto retrievedTask = getTaskDto(task);
                 allTaskDto.add(retrievedTask);
             } else {
