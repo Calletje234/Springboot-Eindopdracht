@@ -1,6 +1,6 @@
 package com.example.SchoolOpdracht.dto;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import com.example.SchoolOpdracht.model.Task;
 
@@ -14,5 +14,5 @@ public class TeacherDto {
     public String lastName;
     @PositiveOrZero
     public int taskAmount;
-    public ArrayList<Task> tasks;
+    public List<Task> tasks;
 }

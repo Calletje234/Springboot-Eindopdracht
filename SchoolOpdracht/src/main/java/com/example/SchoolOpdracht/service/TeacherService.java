@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 // import javax.validation.constraints.Null;
 import java.util.ArrayList;
+import java.util.List;
 
 // import static java.util.Objects.isNull;
 
@@ -67,10 +68,10 @@ public class TeacherService {
         return requestedTeacher.getTaskAmount();
     }
 
-    public ArrayList<TaskDto> getTasksWithStatus(Long id, String status) {
+    public List<TaskDto> getTasksWithStatus(Long id, String status) {
         Teacher requestedTeacher = getTeacherRepos(id);
-        ArrayList<Task> allTask = requestedTeacher.getTasks();
-        ArrayList<TaskDto> allTaskDto = new ArrayList<>();
+        List<Task> allTask = requestedTeacher.getTasks();
+        List<TaskDto> allTaskDto = new List<>();
         for(Task task : allTask) {
             if(status == "running" && task.getStatus() == "running") {
                 TaskDto retrievedTask = getTaskDto(task);
@@ -96,7 +97,7 @@ public class TeacherService {
     public TeacherDto addTaskToTeacher(Long id, Long taskId) {
         Teacher teacherForTaskAdd = getTeacherRepos(id);
         Task taskToAdd = getTaskRepos(taskId);
-        ArrayList<Task> teacherTaskCopy = teacherForTaskAdd.getTasks();
+        List<Task> teacherTaskCopy = teacherForTaskAdd.getTasks();
         int taskAmountCopy = teacherForTaskAdd.getTaskAmount();
         teacherTaskCopy.add(taskToAdd);
         teacherForTaskAdd.setTasks(teacherTaskCopy);
