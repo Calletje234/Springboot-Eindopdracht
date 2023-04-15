@@ -68,14 +68,6 @@ public class TaskController {
         return ResponseEntity.ok(service.changeTaskStatus(id, taskDto));
     }
 
-    @PutMapping("/changeParent/{id}")
-    public ResponseEntity changeParent(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
-        if (br.hasErrors()) {
-            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(service.changeParentId(id, taskDto));
-    }
-
     @PutMapping("/updateDueDate/{id}")
     public ResponseEntity updateDueDate(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {

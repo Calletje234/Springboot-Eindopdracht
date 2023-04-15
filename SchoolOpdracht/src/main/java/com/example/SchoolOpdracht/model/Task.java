@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -11,6 +12,7 @@ import java.util.List;
 @Entity
 @Table(name = "Tasks")
 @Getter @Setter
+@NoArgsConstructor
 public class Task {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,6 +23,9 @@ public class Task {
     private LocalDate dueDate;
     private boolean assigned;
 
+    private Long teacherId;
+    private Long childId;
+
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private Teacher teacher;
@@ -29,15 +34,8 @@ public class Task {
     @JoinColumn(name = "child_id")
     private Child child;
 
-    @OneToOne
-    @JoinColumn(name = "parent_id")
-    private Parent parent;
-
     @OneToMany(mappedBy = "newTask")
     private List<Opmerkingen> opmerkingen;
-
-    // default constructor
-    public Task() {}
 
     public Task(String status, LocalDate dueDate, boolean assigned) {
         this.status = status;

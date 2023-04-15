@@ -1,8 +1,10 @@
 package com.example.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.dto.ChildDto;
+import com.example.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.dto.TaskDto;
-import com.example.SchoolOpdracht.dto.TeacherDto;
+import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.model.Teacher;
@@ -14,12 +16,15 @@ import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 
+import net.bytebuddy.asm.Advice.Local;
+
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.validation.constraints.Null;
 
 @Service
 public class TaskService {
@@ -41,6 +46,10 @@ public class TaskService {
 
         // map dto to entity
         newTask.setDueDate(taskDto.dueDate);
+        newTask.setChild(getChildRepos(taskDto.childId));
+        if(taskDto.teacherId != null) {
+            newTask.setTeacher(getTeacherRepos(taskDto.teacherId));
+        }
 
         Task savedTask = repos.save(newTask);
         
@@ -66,12 +75,6 @@ public class TaskService {
         return requestedTaskDto;
         }
 
-    public TeacherDto getAssignedTeacher(Long id, Long teacherId) {
-        Task requestedTask = getTaskRepos(id);
-        Teacher teacherAssignedToTask = requestedTask.getTeacher();
-        return createTeacherDto(teacherAssignedToTask);
-    }
-
     public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
         taskToChange.setStatus(taskDto.status);
@@ -86,9 +89,9 @@ public class TaskService {
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeAssignedTeacher(Long taskId, Long teacherId,TaskDto taskDto) {
+    public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
-        taskToChange.setTeacher(getTeacherRepos(teacherId));
+        taskToChange.setTeacher(getTeacherRepos(taskDto.teacherId));
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
@@ -99,11 +102,47 @@ public class TaskService {
         return createReturnDto(deletedTask);
     }
 
+    public ChildDto getChildInformation(Long taskId) {
+        Task requestedTask = getTaskRepos(taskId);
+        return createChildReturnDto(getChildRepos(requestedTask.getChildId()));
+    }
+
+    public ParentDto getParentOfTaskChild(Long taskId) {
+        Task requestedTask = getTaskRepos(taskId);
+        return createParentReturnDto(requestedTask.getChild().getParent());
+    }
+
     public TaskDto createReturnDto(Task changedModel) {
         TaskDto requestedDto = new TaskDto();
         requestedDto.dueDate = changedModel.getDueDate();;
         requestedDto.status = changedModel.getStatus();
         return requestedDto;
+    }
+
+    public ParentDto createParentReturnDto(Parent parentModel) {
+        ParentDto parentDto = new ParentDto();
+        parentDto.firstName = parentModel.getFirstName();
+        parentDto.lastName = parentModel.getLastName();
+        parentDto.address = parentModel.getAddress();
+        parentDto.countryOfOrigin = parentModel.getCountryOfOrigin();
+        parentDto.spokenLanguage = parentModel.getSpokenLanguage();
+        parentDto.phoneNumber = parentModel.getPhoneNumber();
+        parentDto.childList = parentModel.getChildren();
+        return parentDto;
+    }
+
+    public ChildDto createChildReturnDto(Child childModel) {
+        ChildDto childDto = new ChildDto();
+        childDto.firstName = childModel.getFirstName();
+        childDto.lastName = childModel.getLastName();
+        childDto.dob = childModel.getDob();
+        childDto.address = childModel.getAddress();
+        childDto.startingDate = childModel.getStartingDate();
+        childDto.countryOfOrigin = childModel.getCountryOfOrigin();
+        childDto.spokenLanguage = childModel.getSpokenLanguage();
+        childDto.Allergies = childModel.getAllergies();
+        childDto.parentId = childModel.getParent().getParentId();
+        return childDto;
     }
 
     public int getDayBeforeOverdue(Long id) {
@@ -134,14 +173,6 @@ public class TaskService {
             }
         }
         return true;
-    }
-
-    public TeacherDto createTeacherDto(Teacher teacherModel) {
-        TeacherDto teacherDto = new TeacherDto();
-        teacherDto.firstName = teacherModel.getFirstName();
-        teacherDto.lastName = teacherModel.getLastName();
-        teacherDto.taskAmount = teacherModel.getTaskAmount();
-        return teacherDto;
     }
 
     public Task getTaskRepos(Long id) {
