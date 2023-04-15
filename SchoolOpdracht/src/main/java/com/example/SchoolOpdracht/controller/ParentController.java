@@ -48,16 +48,6 @@ public class ParentController {
         return ResponseEntity.created(uri).body("Parent Created");
     }
 
-    @PutMapping("/childId/{id}")
-    public ResponseEntity changeChildId(@Valid @RequestBody ParentDto parentDto,
-                                        @PathVariable Long id,
-                                        BindingResult br) {
-        if (br.hasErrors()) {
-            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(service.changeChildId(id, parentDto));
-    }
-
     @PutMapping("/changeFirstName/{id}")
     public ResponseEntity changeFirstName(@Valid @RequestBody ParentDto parentDto,
                                           @PathVariable Long id,
