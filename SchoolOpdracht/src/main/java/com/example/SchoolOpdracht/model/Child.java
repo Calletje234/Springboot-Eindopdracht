@@ -26,7 +26,6 @@ public class Child {
     private String spokenLanguage;
     private ArrayList<String> Allergies;
     private LocalDate startingDate;
-    private Long parentId;
 
     @OneToOne(mappedBy = "child")
     private Task task;

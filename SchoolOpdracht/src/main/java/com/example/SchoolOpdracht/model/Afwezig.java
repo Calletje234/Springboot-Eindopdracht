@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
@@ -11,6 +12,7 @@ import javax.persistence.*;
 @Entity
 @Table(name = "Afwezig")
 @Getter @Setter
+@NoArgsConstructor
 public class Afwezig {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,12 +27,11 @@ public class Afwezig {
     @JoinColumn(name = "teacherId")
     Teacher afwezigTeacher;
 
-    // default constructor
-    public Afwezig() {}
-
-    public Afwezig(String reason, LocalDate startDate, LocalDate endDate) {
+    public Afwezig(Long afwezigId,String reason, LocalDate startDate, LocalDate endDate, Teacher teacher) {
+        this.afwezigId = afwezigId;
         this.reason = reason;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.afwezigTeacher = teacher;
     }
 }

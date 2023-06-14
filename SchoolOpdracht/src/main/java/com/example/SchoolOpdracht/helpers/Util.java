@@ -10,7 +10,7 @@ import java.time.LocalDate;
 
 
 public class Util{
-    public static void checkId(Long id, CrudRepository repos) {
+    public static void checkId(Long id, CrudRepository<?, Long> repos) {
         if(id < 0) {
             throw new IndexOutOfBoundsException("Id is not allowed to be negative");
         } else if (!repos.existsById(id)) {

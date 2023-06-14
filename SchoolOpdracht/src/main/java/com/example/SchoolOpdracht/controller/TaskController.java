@@ -52,6 +52,14 @@ public class TaskController {
         return ResponseEntity.created(uri).body("Task Created");
     }
 
+    @PutMapping("/changeDescription/{id}")
+    public ResponseEntity changeDescription(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.changeDescription(id, taskDto));
+    }
+
     @PutMapping("/changeTeacher/{id}")
     public ResponseEntity changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {
@@ -76,7 +84,7 @@ public class TaskController {
         return ResponseEntity.ok(service.changeDueDate(id, taskDto));
     }
 
-    @DeleteMapping("/${id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity deleteTask(@PathVariable Long id) {
         return ResponseEntity.ok(service.deleteTaskById(id));
     }

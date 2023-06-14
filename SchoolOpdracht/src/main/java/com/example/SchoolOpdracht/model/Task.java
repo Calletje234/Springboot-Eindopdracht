@@ -21,6 +21,7 @@ public class Task {
     // Variables not mapped by other services
     private String status;
     private LocalDate dueDate;
+    private String taskDescription;
     private boolean assigned;
 
     @ManyToOne

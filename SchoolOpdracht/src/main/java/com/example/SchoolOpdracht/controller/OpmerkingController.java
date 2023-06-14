@@ -48,6 +48,7 @@ public class OpmerkingController {
         return ResponseEntity.ok(service.deleteOpmerkingById(id));
     }
 
+    // Change to /{id}/changeOpmerking
     @PutMapping("/changeOpmerking/{id}")
     public ResponseEntity changeOpmerking(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
                                           @PathVariable Long id,
@@ -67,10 +68,4 @@ public class OpmerkingController {
         }
         return ResponseEntity.ok(service.changeContactDate(id, opmerkingenDto));
     }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity deleteOpmerkingById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteOpmerkingById(id));
-    }
-
 }

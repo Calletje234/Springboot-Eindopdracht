@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "Teachers")
 @Getter @Setter
+@NoArgsConstructor
 public class Teacher {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +29,8 @@ public class Teacher {
     @OneToMany(mappedBy = "afwezigTeacher")
     private List<Afwezig> afwezigheid;
 
-    // default constructor
-    public Teacher() {}
-
-    public Teacher(String firstName, String lastName, int taskAmount) {
+    public Teacher(Long teacherId,String firstName, String lastName, int taskAmount) {
+        this.teacherId = teacherId;
         this.firstName = firstName;
         this.lastName = lastName;
         this.taskAmount = taskAmount;

@@ -97,6 +97,13 @@ public class TaskService {
         return createReturnDto(taskToChange);
     }
 
+    public TaskDto changeDescription(Long taskId, TaskDto taskDto) {
+        Task taskToChange = getTaskRepos(taskId);
+        taskToChange.setTaskDescription(taskDto.taskDescription);
+        repos.save(taskToChange);
+        return createReturnDto(taskToChange);
+    }
+
     public TaskDto deleteTaskById(Long taskId) {
         Task deletedTask = getTaskRepos(taskId);
         repos.deleteById(taskId);
@@ -115,8 +122,11 @@ public class TaskService {
 
     public TaskDto createReturnDto(Task changedModel) {
         TaskDto requestedDto = new TaskDto();
-        requestedDto.dueDate = changedModel.getDueDate();;
+        requestedDto.childId = changedModel.getChild().getChildId();
+        requestedDto.teacherId = changedModel.getTeacher().getTeacherId();
+        requestedDto.dueDate = changedModel.getDueDate();
         requestedDto.status = changedModel.getStatus();
+        requestedDto.taskDescription = changedModel.getTaskDescription();
         return requestedDto;
     }
 
