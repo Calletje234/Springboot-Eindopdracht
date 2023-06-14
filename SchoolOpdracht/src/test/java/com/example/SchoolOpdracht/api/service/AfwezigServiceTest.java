@@ -6,6 +6,8 @@ import com.example.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 import com.example.SchoolOpdracht.service.AfwezigService;
+import net.bytebuddy.asm.Advice;
+import org.checkerframework.checker.nullness.Opt;
 import org.checkerframework.checker.units.qual.A;
 import org.junit.Assert;
 import org.junit.jupiter.api.Assertions;
@@ -41,39 +43,36 @@ class AfwezigServiceTest {
     AfwezigService service;
 
     Teacher teacher1;
+    Afwezig afwezig1;
 
     @BeforeEach
     void setUp() {
         teacher1 = new Teacher(23L, "Calvin", "Boxtart", 3);
+        afwezig1 = new Afwezig(1L, "Vacation", LocalDate.of(2023, 10, 5), LocalDate.of(2023, 10, 15), teacher1);
 
     }
 
     @Test
     void shouldReturnCorrectAfwezig() {
         // arrange
-        Afwezig afwezig = new Afwezig(1L,
-                "Vacation",
-                LocalDate.of(2023, 10, 5),
-                LocalDate.of(2023, 10, 15),
-                teacher1);
-
-        AfwezigDto afwezigDto = new AfwezigDto();
-        afwezigDto.reason = afwezig.getReason();
-        afwezigDto.startDate = afwezig.getStartDate();
-        afwezigDto.endDate = afwezig.getEndDate();
-
-        when(repos.findById(1L)).thenReturn(Optional.of(afwezig));
-        when(repos.existsById(1L)).thenReturn(true);
+        when(afwezigRepository.findById(1L)).thenReturn(Optional.of(afwezig1));
+        when(afwezigRepository.existsById(1L)).thenReturn(true);
+        when(teacherRepository.findById(23L)).thenReturn(Optional.of(teacher1));
+        when(teacherRepository.existsById(23L)).thenReturn(true);
 
         // act
         AfwezigDto afto = service.getAfwezigById(1L);
 
         //assert
-        verify(repos, times(1)).findById(1L);
-        verify(repos, times(1)).existsById(1L);
-        assertEquals(afto.reason, afwezigDto.reason);
-        assertEquals(afto.startDate, afwezigDto.startDate);
-        assertEquals(afto.endDate, afwezigDto.endDate);
+        verify(afwezigRepository, times(1)).findById(1L);
+        verify(afwezigRepository, times(1)).existsById(1L);
+        verify(teacherRepository, times(1)).findById(23L);
+        verify(teacherRepository, times(1)).existsById(23L);
+        assertEquals(afto.afwezigId(), afwezig1.getAfwezigId());
+        assertEquals(afto.reason(), afwezig1.getReason());
+        assertEquals(afto.startDate(), afwezig1.getStartDate());
+        assertEquals(afto.endDate(), afwezig1.getEndDate());
+        assertEquals(afto.teacherId(), afwezig1.getAfwezigTeacher().getTeacherId());
     }
 
     @Test
