@@ -13,6 +13,5 @@ public class inputTeacherDto {
     public String lastName;
     @PositiveOrZero
     public int taskAmount;
-    public List<Task> tasks;
 }
 

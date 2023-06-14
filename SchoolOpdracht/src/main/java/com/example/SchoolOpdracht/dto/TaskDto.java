@@ -1,21 +1,20 @@
 package com.example.SchoolOpdracht.dto;
 
+import com.example.SchoolOpdracht.model.Opmerkingen;
+
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 
 import java.time.LocalDate;
+import java.util.List;
 
-public class TaskDto {
-    @Future
-    public LocalDate dueDate;
-
-    @NotNull
-    public Long childId;
-
-    public String taskDescription;
-
-    public Long teacherId = null;
-
-    public String status;
+public record TaskDto(Long taskId,
+                      String status,
+                      LocalDate dueDate,
+                      String taskDescription,
+                      boolean assigned,
+                      Long teacherId,
+                      Long childId,
+                      List<Opmerkingen> opmerkingList) {
 }

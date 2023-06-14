@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import net.bytebuddy.asm.Advice;
 
@@ -12,6 +13,7 @@ import java.util.ArrayList;
 @Entity
 @Table(name = "Childs")
 @Getter @Setter
+@NoArgsConstructor
 public class Child {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,9 +36,6 @@ public class Child {
     @JoinColumn(name = "parentId")
     private Parent parent;
 
-    // default constructor
-    public Child() {}
-
     public Child(String firstName,
                  String lastName,
                  LocalDate dob,
@@ -44,7 +43,8 @@ public class Child {
                  String countryOfOrigin,
                  String spokenLanguage,
                  ArrayList<String> allergies,
-                 LocalDate startingDate) {
+                 LocalDate startingDate,
+                 Parent parent) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.dob = dob;
@@ -53,5 +53,6 @@ public class Child {
         this.spokenLanguage = spokenLanguage;
         this.Allergies = allergies;
         this.startingDate = startingDate;
+        this.parent = parent;
     }
 }

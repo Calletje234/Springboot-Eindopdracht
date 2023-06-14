@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Opmerkingen")
 @Getter @Setter
+@NoArgsConstructor
 public class Opmerkingen {
     @Id
     @GeneratedValue
@@ -21,10 +23,7 @@ public class Opmerkingen {
 
     @ManyToOne
     @JoinColumn(name = "taskId")
-    Task newTask;
-
-    // default constructor
-    public Opmerkingen() {}
+    private Task newTask;
 
     public Opmerkingen(LocalDate dateOfContact, String opmerking) {
         this.dateOfContact = dateOfContact;

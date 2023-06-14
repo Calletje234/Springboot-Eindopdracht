@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.model;
 
 
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.util.List;
 @Entity
 @Table(name = "Parents")
 @Getter @Setter
+@NoArgsConstructor
 public class Parent {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,9 +27,6 @@ public class Parent {
 
     @OneToMany(mappedBy = "parent")
     private List<Child> children;
-
-    // default constructor
-    public Parent() {}
 
     public Parent(String firstName,
                   String lastName,

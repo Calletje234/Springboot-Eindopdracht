@@ -5,13 +5,9 @@ import java.time.LocalDate;
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
 
-public class AfwezigDto {
-    @NotBlank
-    public Long teacherId;
-    @NotBlank
-    public String reason;
-    @NotBlank
-    public LocalDate startDate;
-    @Future
-    public LocalDate endDate;
+public record AfwezigDto(Long afwezigId,
+                         Long teacherId,
+                         String reason,
+                         LocalDate startDate,
+                         LocalDate endDate) {
 }

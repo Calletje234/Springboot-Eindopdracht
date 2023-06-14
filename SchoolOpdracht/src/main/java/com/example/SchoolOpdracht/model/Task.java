@@ -35,9 +35,15 @@ public class Task {
     @OneToMany(mappedBy = "newTask")
     private List<Opmerkingen> opmerkingen;
 
-    public Task(String status, LocalDate dueDate, boolean assigned) {
+    public Task(String status,
+                LocalDate dueDate,
+                boolean assigned,
+                Teacher teacher,
+                Child child) {
         this.status = status;
         this.dueDate = dueDate;
         this.assigned = assigned;
+        this.teacher = teacher;
+        this.child = child;
     }
 }
