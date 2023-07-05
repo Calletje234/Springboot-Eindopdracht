@@ -69,10 +69,7 @@ class AfwezigControllerTest {
     @Test
     @WithMockUser(username="testuser", roles="USER")
     void changeReason() throws Exception {
-        
-        String newReason = "Sick with Fever";
-
-        Mockito.when(afwezigService.changeReasonAfwezig(123L, newReason)).thenReturn(this.reasonto);
+        Mockito.when(afwezigService.changeReasonAfwezig(123L, reasonto)).thenReturn(this.reasonto);
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders.get("/afwezig/123"))
@@ -80,7 +77,7 @@ class AfwezigControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.startDate", is(LocalDate.of(2023, 10, 5))))
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.endDate", is(LocalDate.of(2023, 10, 15))))
-                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.reason", is(newReason)))
+                .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.reason", is(reasonto.reason)))
                 .andExpect((ResultMatcher) MockMvcResultMatchers.jsonPath("$.teacherId", is(123456L)));
     }
 }
