@@ -4,6 +4,7 @@ import com.example.SchoolOpdracht.dto.AfwezigDto;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Afwezig;
 import com.example.SchoolOpdracht.repository.AfwezigRepository;
+import com.example.SchoolOpdracht.repository.TeacherRepository;
 
 import org.apache.tomcat.jni.Local;
 import org.checkerframework.checker.units.qual.A;
@@ -30,6 +31,9 @@ class AfwezigServiceTest {
     AfwezigRepository repos;
 
     @Mock
+    TeacherRepository teacherRepos;
+
+    @Mock
     Util util;
 
     @InjectMocks
@@ -37,8 +41,7 @@ class AfwezigServiceTest {
 
     @BeforeEach
     void testSetup() {
-        Afwezig afwezig = new Afwezig("Vacation", LocalDate.of(2023, 10, 5), LocalDate.of(2023, 10, 15));
-        this.afwezig = afwezig;
+        afwezig = new Afwezig("Vacation", LocalDate.of(2023, 10, 5), LocalDate.of(2023, 10, 15));
     }
 
     @Test
@@ -55,7 +58,7 @@ class AfwezigServiceTest {
         Mockito.when(repos.findById(anyLong())).thenReturn(Optional.of(afwezig));
 
         // act
-        AfwezigDto afto = service.getAfwezigById(1L);
+        AfwezigDto afto = service.getAfwezigById(1L);     
 
         //assert
         assertEquals("Vacation", afto.reason, "Reason doesn't match");
