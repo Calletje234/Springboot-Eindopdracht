@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.model;
 
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.validator.internal.util.privilegedactions.LoadClass;
 
 import javax.persistence.*;
 import java.time.LocalDate;
@@ -26,8 +27,10 @@ public class Opmerkingen {
     // default constructor
     public Opmerkingen() {}
 
-    public Opmerkingen(LocalDate dateOfContact, String opmerking) {
+    public Opmerkingen(Long opmerkingenId, LocalDate dateOfContact, String opmerking, Task task) {
+        this.opmerkingenId = opmerkingenId;
         this.dateOfContact = dateOfContact;
         this.opmerking = opmerking;
+        this.newTask = task;
     }
 }

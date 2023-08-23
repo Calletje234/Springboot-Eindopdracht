@@ -28,9 +28,11 @@ public class Afwezig {
     // default constructor
     public Afwezig() {}
 
-    public Afwezig(String reason, LocalDate startDate, LocalDate endDate) {
+    public Afwezig(Long afwezigId, String reason, LocalDate startDate, LocalDate endDate, Teacher afwezigTeacher) {
+        this.afwezigId = afwezigId;
         this.reason = reason;
         this.startDate = startDate;
         this.endDate = endDate;
+        this.afwezigTeacher = afwezigTeacher;
     }
 }
