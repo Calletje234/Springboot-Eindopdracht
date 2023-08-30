@@ -134,17 +134,51 @@ class OpmerkingServiceTest {
 
     @Test
     void deleteOpmerkingById() {
+        // arrange
+        Mockito.when(repos.findById(anyLong())).thenReturn(Optional.of(opmerking1));
+        Mockito.when(repos.existsById(anyLong())).thenReturn(true);
+
+        // act
+        OpmerkingenDto result = service.deleteOpmerkingById(1L);
+
+        // assert
+        assertEquals(opmerking1.getOpmerking(), result.opmerking, "deleteOpmerkingById should return opmerking1");
+        assertEquals(opmerking1.getDateOfContact(), result.dateOfContact, "deleteOpmerkingById should return opmerking1");
     }
 
     @Test
     void createReturnDto() {
+        // act
+        OpmerkingenDto result = service.createReturnDto(opmerking2);
+
+        // assert
+        assertEquals(opmerking2.getOpmerking(), result.opmerking, "createReturnDto should return opmerking2");
+        assertEquals(opmerking2.getDateOfContact(), result.dateOfContact, "createReturnDto should return opmerking2");
     }
 
     @Test
     void getTaskRepos() {
+        // arrange
+        Mockito.when(taskRepos.findById(anyLong())).thenReturn(Optional.of(task1));
+        Mockito.when(taskRepos.existsById(anyLong())).thenReturn(true);
+
+        // act
+        Task result = service.getTaskRepos(1L);
+
+        // assert
+        assertEquals(task1.getTaskId(), result.getTaskId(), "getTaskRepos should return task1");
     }
 
     @Test
     void getOpmerkingRepos() {
+        // arrange
+        Mockito.when(repos.findById(anyLong())).thenReturn(Optional.of(opmerking1));
+        Mockito.when(repos.existsById(anyLong())).thenReturn(true);
+
+        // act
+        Opmerkingen result = service.getOpmerkingRepos(1L);
+
+        // assert
+        assertEquals(opmerking1.getOpmerkingenId(), result.getOpmerkingenId(), "getOpmerkingRepos should return opmerking1");
     }
 }

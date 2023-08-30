@@ -160,13 +160,40 @@ class AfwezigServiceTest {
 
     @Test
     void deleteAfwezigById() {
+        // arrange
+        Mockito.when(repos.findById(anyLong())).thenReturn(Optional.of(afwezig));
+        Mockito.when(repos.existsById(anyLong())).thenReturn(true);
+
+        // act
+        AfwezigDto afto = service.deleteAfwezigById(1L);
+
+        // assert
+        assertEquals(afwezig.getReason(), afto.reason, "Reason doesn't match");
+        assertEquals(afwezig.getStartDate(), afto.startDate, "Start date doesn't match");
+        assertEquals(afwezig.getEndDate(), afto.endDate, "End date doesn't match");
     }
 
     @Test
     void createReturnDto() {
+        // act
+        AfwezigDto afto = service.createReturnDto(afwezig);
+
+        // assert
+        assertEquals(afwezig.getReason(), afto.reason, "Reason doesn't match");
+        assertEquals(afwezig.getStartDate(), afto.startDate, "Start date doesn't match");
+        assertEquals(afwezig.getEndDate(), afto.endDate, "End date doesn't match");
     }
 
     @Test
     void getAfwezigRepos() {
+        // arrange
+        Mockito.when(repos.findById(anyLong())).thenReturn(Optional.of(afwezig));
+        Mockito.when(repos.existsById(anyLong())).thenReturn(true);
+
+        // act
+        Afwezig result = service.getAfwezigRepos(1L);
+
+        // assert
+        assertEquals(afwezig.getReason(), result.getReason(), "getAfwezigRepos should return repos");
     }
 }

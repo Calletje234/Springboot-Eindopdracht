@@ -142,7 +142,7 @@ public class ChildService {
 
     public ChildDto createReturnDto(Child childModel) {
         ChildDto requestDto = new ChildDto();
-        requestDto.parentId = childModel.getParentId();
+        requestDto.parentId = childModel.getParent().getParentId();
         requestDto.firstName = childModel.getFirstName();
         requestDto.lastName = childModel.getLastName();
         requestDto.address = childModel.getAddress();

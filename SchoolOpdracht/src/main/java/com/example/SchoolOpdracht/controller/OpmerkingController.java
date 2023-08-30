@@ -43,11 +43,6 @@ public class OpmerkingController {
         return ResponseEntity.created(uri).body("Opmerking created");
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<OpmerkingenDto> removeOpmerkingById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteOpmerkingById(id));
-    }
-
     @PutMapping("/changeOpmerking/{id}")
     public ResponseEntity changeOpmerking(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
                                           @PathVariable Long id,
