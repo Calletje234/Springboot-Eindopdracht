@@ -11,7 +11,6 @@ import com.example.SchoolOpdracht.repository.TaskRepository;
 
 import org.springframework.stereotype.Service;
 
-import javax.management.openmbean.OpenMBeanAttributeInfo;
 import java.util.ArrayList;
 
 @Service

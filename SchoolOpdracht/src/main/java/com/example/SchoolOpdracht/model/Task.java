@@ -21,7 +21,7 @@ public class Task {
     // Variables not mapped by other services
     private String status;
     private LocalDate dueDate;
-    private boolean assigned;
+    private Boolean assigned;
 
     @ManyToOne
     @JoinColumn(name = "teacherId")

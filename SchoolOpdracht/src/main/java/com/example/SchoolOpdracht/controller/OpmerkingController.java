@@ -67,5 +67,4 @@ public class OpmerkingController {
     public ResponseEntity deleteOpmerkingById(@PathVariable Long id) {
         return ResponseEntity.ok(service.deleteOpmerkingById(id));
     }
-
 }

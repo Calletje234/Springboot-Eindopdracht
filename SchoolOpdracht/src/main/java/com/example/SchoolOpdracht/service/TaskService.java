@@ -71,9 +71,7 @@ public class TaskService {
     public TaskDto getTaskById(Long id) {
         Util.checkId(id, repos);
         Task requestedTask = repos.findById(id).get();
-        TaskDto requestedTaskDto = new TaskDto();
-        requestedTaskDto.dueDate = requestedTask.getDueDate();
-        return requestedTaskDto;
+        return createReturnDto(requestedTask);
         }
 
     public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
@@ -115,8 +113,9 @@ public class TaskService {
 
     public TaskDto createReturnDto(Task changedModel) {
         TaskDto requestedDto = new TaskDto();
-        requestedDto.dueDate = changedModel.getDueDate();;
+        requestedDto.dueDate = changedModel.getDueDate();
         requestedDto.status = changedModel.getStatus();
+        requestedDto.assigned = changedModel.getAssigned();
         return requestedDto;
     }
 
