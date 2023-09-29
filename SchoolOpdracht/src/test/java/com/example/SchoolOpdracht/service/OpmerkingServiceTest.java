@@ -1,10 +1,11 @@
 package com.example.SchoolOpdracht.service;
 
-import com.example.SchoolOpdracht.dto.OpmerkingenDto;
-import com.example.SchoolOpdracht.model.Opmerkingen;
-import com.example.SchoolOpdracht.model.Task;
-import com.example.SchoolOpdracht.repository.OpmerkingenRepository;
-import com.example.SchoolOpdracht.repository.TaskRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.service.OpmerkingService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

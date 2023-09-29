@@ -1,10 +1,10 @@
 package com.example.SchoolOpdracht.Integratie;
 
-import com.example.SchoolOpdracht.dto.OpmerkingenDto;
-import com.example.SchoolOpdracht.model.Opmerkingen;
-import com.example.SchoolOpdracht.model.Task;
-import com.example.SchoolOpdracht.repository.OpmerkingenRepository;
-import com.example.SchoolOpdracht.repository.TaskRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;

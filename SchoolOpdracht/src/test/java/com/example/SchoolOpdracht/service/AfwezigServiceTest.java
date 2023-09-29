@@ -1,14 +1,12 @@
 package com.example.SchoolOpdracht.service;
 
-import com.example.SchoolOpdracht.dto.AfwezigDto;
-import com.example.SchoolOpdracht.helpers.Util;
-import com.example.SchoolOpdracht.model.Afwezig;
-import com.example.SchoolOpdracht.model.Teacher;
-import com.example.SchoolOpdracht.repository.AfwezigRepository;
-import com.example.SchoolOpdracht.repository.TeacherRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.AfwezigDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Afwezig;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.AfwezigRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
 
-import org.apache.tomcat.jni.Local;
-import org.checkerframework.checker.units.qual.A;
+import com.example.SchoolOpdracht.SchoolOpdracht.service.AfwezigService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

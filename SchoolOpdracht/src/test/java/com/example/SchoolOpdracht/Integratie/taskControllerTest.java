@@ -3,11 +3,11 @@ package com.example.SchoolOpdracht.Integratie;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
-import com.example.SchoolOpdracht.model.Child;
-import com.example.SchoolOpdracht.model.Teacher;
-import com.example.SchoolOpdracht.repository.ChildRepository;
-import com.example.SchoolOpdracht.repository.TaskRepository;
-import com.example.SchoolOpdracht.repository.TeacherRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Child;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.junit.jupiter.api.AfterEach;
@@ -18,8 +18,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import com.example.SchoolOpdracht.dto.TaskDto;
-import com.example.SchoolOpdracht.model.Task;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.TaskDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
