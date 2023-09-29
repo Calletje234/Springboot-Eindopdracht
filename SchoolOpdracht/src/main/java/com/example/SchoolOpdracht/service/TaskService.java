@@ -4,7 +4,6 @@ package com.example.SchoolOpdracht.service;
 import com.example.SchoolOpdracht.dto.ChildDto;
 import com.example.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.dto.TaskDto;
-import com.example.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.model.Teacher;
@@ -16,12 +15,11 @@ import com.example.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.repository.TeacherRepository;
 
-import net.bytebuddy.asm.Advice.Local;
 
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,9 +42,9 @@ public class TaskService {
 
     public Long createTask(TaskDto taskDto) {
         Task newTask = new Task();
-
+        LocalDate dueDate = taskDto.dueDate.plusWeeks(6);
         // map dto to entity
-        newTask.setDueDate(taskDto.dueDate);
+        newTask.setDueDate(dueDate);
         newTask.setChild(getChildRepos(taskDto.childId));
         if(taskDto.teacherId != null) {
             newTask.setTeacher(getTeacherRepos(taskDto.teacherId));
@@ -88,11 +86,11 @@ public class TaskService {
         return createReturnDto(taskToChange);
     }
 
-    public TaskDto changeAssignedTeacher(Long taskId, TaskDto taskDto) {
+    public Long changeAssignedTeacher(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);
         taskToChange.setTeacher(getTeacherRepos(taskDto.teacherId));
         repos.save(taskToChange);
-        return createReturnDto(taskToChange);
+        return taskToChange.getTeacher().getTeacherId();
     }
 
     public TaskDto deleteTaskById(Long taskId) {
@@ -145,23 +143,18 @@ public class TaskService {
         return childDto;
     }
 
-    public int getDayBeforeOverdue(Long id) {
+    public long getDayBeforeOverdue(Long id) {
         Task taskToCheck = getTaskRepos(id);
         LocalDate taskDueDate = taskToCheck.getDueDate();
         LocalDate todaysDate = LocalDate.now();
-        Period period = Period.between(taskDueDate, todaysDate);
-        return period.getDays();
+        return ChronoUnit.DAYS.between(taskDueDate, todaysDate);
     }
 
     public Boolean checkIfTaskIsOverdue(Long id) {
         Task taskToCheck = getTaskRepos(id);
         LocalDate tasksDueDate = taskToCheck.getDueDate();
         LocalDate todaysDate = LocalDate.now();
-        if(todaysDate.isBefore(tasksDueDate)) {
-            return false;
-        } else {
-            return true;
-        }
+        return !tasksDueDate.isBefore(todaysDate);
     }
 
     public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {

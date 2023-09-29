@@ -1,6 +1,5 @@
 package com.example.SchoolOpdracht.Integratie;
 
-import com.example.SchoolOpdracht.controller.OpmerkingController;
 import com.example.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.model.Opmerkingen;
 import com.example.SchoolOpdracht.model.Task;
@@ -21,7 +20,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import java.time.LocalDate;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @SpringBootTest

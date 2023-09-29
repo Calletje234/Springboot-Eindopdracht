@@ -1,31 +1,29 @@
 package com.example.SchoolOpdracht.Integratie;
 
 import java.time.LocalDate;
-import java.util.List;
+import java.time.temporal.ChronoUnit;
 
+import com.example.SchoolOpdracht.model.Child;
+import com.example.SchoolOpdracht.model.Teacher;
+import com.example.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.repository.TaskRepository;
+import com.example.SchoolOpdracht.repository.TeacherRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.aspectj.lang.annotation.After;
 import org.junit.jupiter.api.AfterEach;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import com.example.SchoolOpdracht.dto.TaskDto;
-import com.example.SchoolOpdracht.controller.TaskController;
 import com.example.SchoolOpdracht.model.Task;
-import com.example.SchoolOpdracht.service.TaskService;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.BDDMockito.given;
 
 
 @SpringBootTest
@@ -38,12 +36,23 @@ class taskControllerTest {
     @Autowired
     private TaskRepository  taskRepo;
 
+    @Autowired
+    private ChildRepository childRepo;
+
+    @Autowired
+    private TeacherRepository teacherRepo;
+
     private Long taskId1;
     private Long taskId2;
     private Long taskId3;
     private Long taskId4;
 
-    private final LocalDate date1 = LocalDate.of(2023, 5, 10);
+    private Long childId;
+
+    private Long teacherId;
+    private Long teacherId2;
+
+    private final LocalDate date1 = LocalDate.now();
     private final LocalDate date2 = LocalDate.of(2022, 9,15);
 
     private final String status1 = "Picked up";
@@ -53,6 +62,16 @@ class taskControllerTest {
 
     @BeforeEach
     public void setUp() {
+        Child child = new Child("Jack", "Sparrow", LocalDate.of(2021, 9, 10),
+                "Caribbean", "Pirate", "English", null, LocalDate.of(2023, 2, 2));
+        childId = childRepo.save(child).getChildId();
+
+        Teacher teacher = new Teacher("Edward", "Teach", 2);
+        Teacher teacher2 = new Teacher("Davy", "Jones", 3);
+        teacherId = teacherRepo.save(teacher).getTeacherId();
+        teacherId2 = teacherRepo.save(teacher2).getTeacherId();
+
+
         Task task1 = new Task(status1, date1, true);
         Task task2 = new Task(status3, date2, false);
         Task task3 = new Task(status4, date2, false);
@@ -97,22 +116,33 @@ class taskControllerTest {
     }
 
     @Test
-    void checkIfTaskIsOverdue() throws Exception {
+    void checkIfTaskIsOverdueExpectTrue() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/tasks/checkDueDate/" + taskId1))
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(true));
+    }
+
+    @Test
+    void checkIfTaskIsOverdueExpectFalse() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/checkDueDate/" + taskId2))
                 .andExpect(MockMvcResultMatchers.status().isOk())
                 .andExpect(MockMvcResultMatchers.jsonPath("$").value(false));
     }
 
     @Test
     void getAmountOfDays() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/daysBeforeOverDue/" + taskId1))
+        // arrange
+        long daysBetween = ChronoUnit.DAYS.between(date2, LocalDate.now());
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/tasks/daysBeforeOverDue/" + taskId2))
                 .andExpect(MockMvcResultMatchers.status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$").value(0));
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(daysBetween));
     }
 
     @Test
     void createTask() throws Exception {
         TaskDto taskDto = createDto(date1, status1, true);
+        taskDto.childId = childId;
         mockMvc.perform(MockMvcRequestBuilders.post("/tasks")
                 .contentType("application/json")
                 .content(asJsonString(taskDto)))
@@ -122,28 +152,35 @@ class taskControllerTest {
     @Test
     void changeTeacher() throws Exception {
         TaskDto taskDto = createDto(date1, status1, true);
+        taskDto.childId = childId;
+        taskDto.teacherId = teacherId;
         mockMvc.perform(MockMvcRequestBuilders.put("/tasks/changeTeacher/" + taskId1)
                 .contentType("application/json")
                 .content(asJsonString(taskDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$").value(teacherId));
     }
 
     @Test
     void updateTaskStatus() throws Exception {
-        TaskDto taskDto = createDto(date1, status1, true);
+        TaskDto taskDto = createDto(date1, status3, true);
+        taskDto.childId = childId;
         mockMvc.perform(MockMvcRequestBuilders.put("/tasks/updateStatus/" + taskId1)
                 .contentType("application/json")
                 .content(asJsonString(taskDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.status").value(status3));
     }
 
     @Test
     void updateDueDate() throws Exception {
-        TaskDto taskDto = createDto(date1, status1, true);
+        TaskDto taskDto = createDto(date2, status1, true);
+        taskDto.childId = childId;
         mockMvc.perform(MockMvcRequestBuilders.put("/tasks/updateDueDate/" + taskId1)
                 .contentType("application/json")
                 .content(asJsonString(taskDto)))
-                .andExpect(MockMvcResultMatchers.status().isOk());
+                .andExpect(MockMvcResultMatchers.status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.dueDate").value(date2.toString()));
     }
 
     @Test

@@ -36,7 +36,7 @@ public class TaskController {
     }
 
     @GetMapping("/daysBeforeOverDue/{id}")
-    public ResponseEntity<Integer> getAmountOfDays(@PathVariable Long id) {
+    public ResponseEntity<Long> getAmountOfDays(@PathVariable Long id) {
         return ResponseEntity.ok(service.getDayBeforeOverdue(id));
     }
 
@@ -53,7 +53,7 @@ public class TaskController {
     }
 
     @PutMapping("/changeTeacher/{id}")
-    public ResponseEntity changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
+    public ResponseEntity<Long> changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
