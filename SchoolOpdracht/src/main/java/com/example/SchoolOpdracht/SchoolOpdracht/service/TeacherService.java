@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.TeacherStillHasTaskException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.TaskDto;
@@ -104,6 +105,10 @@ public class TeacherService {
 
     public TeacherDto deleteTeacherById(Long id) {
         Teacher deletedTeacher = getTeacherRepos(id);
+        List<Task> tasks = deletedTeacher.getTasks();
+        if (!tasks.isEmpty()) {
+            throw new TeacherStillHasTaskException("Teacher still has tasks assigned");
+        }
         repos.deleteById(id);
         return getReturnTeacherDto(deletedTeacher);
     }
