@@ -35,7 +35,7 @@ public class TeacherController {
     }
 
     @GetMapping("/getTasks/{id}")
-    public ResponseEntity<List<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestBody String taskStatus) {
+    public ResponseEntity<List<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestParam String taskStatus) {
         return ResponseEntity.ok(service.getTasksWithStatus(id, taskStatus));
     }
 
