@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.Integratie;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.SchoolOpdrachtApplication;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Teacher;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
@@ -26,7 +27,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.hamcrest.Matchers.hasSize;
 
 
-@SpringBootTest
+@SpringBootTest(classes = SchoolOpdrachtApplication.class)
 @AutoConfigureMockMvc(addFilters = false)
 class taskControllerTest {
 

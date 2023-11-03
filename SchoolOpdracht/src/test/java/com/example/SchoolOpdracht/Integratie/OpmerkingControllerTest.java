@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.Integratie;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.SchoolOpdrachtApplication;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
@@ -7,6 +8,7 @@ import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepositor
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import org.checkerframework.checker.units.qual.cd;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -22,7 +24,7 @@ import java.time.LocalDate;
 import static org.hamcrest.Matchers.hasSize;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
-@SpringBootTest
+@SpringBootTest(classes = SchoolOpdrachtApplication.class)
 @AutoConfigureMockMvc(addFilters = false)
 class OpmerkingControllerTest {
 
