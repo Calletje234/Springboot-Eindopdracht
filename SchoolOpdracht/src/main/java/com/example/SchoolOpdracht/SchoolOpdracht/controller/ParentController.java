@@ -113,8 +113,9 @@ public class ParentController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteParentById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteParentById(id));
+    public ResponseEntity<String> deleteParentById(@PathVariable Long id) {
+        service.deleteParentById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

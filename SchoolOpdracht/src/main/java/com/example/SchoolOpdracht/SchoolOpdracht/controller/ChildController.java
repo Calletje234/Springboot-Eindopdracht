@@ -138,8 +138,9 @@ public class ChildController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<ChildDto> removeChildById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.removeChildById(id));
+    public ResponseEntity<String> removeChildById(@PathVariable Long id) {
+        service.removeChildById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 }

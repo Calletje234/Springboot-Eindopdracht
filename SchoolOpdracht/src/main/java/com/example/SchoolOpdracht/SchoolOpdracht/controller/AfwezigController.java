@@ -80,7 +80,8 @@ public class AfwezigController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AfwezigDto> deleteAfwezigById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteAfwezigById(id));
+    public ResponseEntity<String> deleteAfwezigById(@PathVariable Long id) {
+        service.deleteAfwezigById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

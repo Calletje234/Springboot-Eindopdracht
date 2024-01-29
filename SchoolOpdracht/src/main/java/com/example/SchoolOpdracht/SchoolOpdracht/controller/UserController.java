@@ -7,10 +7,10 @@ import com.example.SchoolOpdracht.SchoolOpdracht.repository.UserRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.UserDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Role;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.User;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 import java.util.ArrayList;
@@ -49,5 +49,10 @@ public class UserController {
         userRepos.save(newUser);
 
         return "Done";
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

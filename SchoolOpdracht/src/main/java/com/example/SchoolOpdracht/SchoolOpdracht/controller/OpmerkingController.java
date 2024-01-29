@@ -70,7 +70,8 @@ public class OpmerkingController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity deleteOpmerkingById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteOpmerkingById(id));
+    public ResponseEntity<String> deleteOpmerkingById(@PathVariable Long id) {
+        service.deleteOpmerkingById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

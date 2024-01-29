@@ -60,8 +60,9 @@ public class TeacherController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<TeacherDto> removeTeacherById(@PathVariable Long id) {
-        return ResponseEntity.ok(service.deleteTeacherById(id));
+    public ResponseEntity<String> removeTeacherById(@PathVariable Long id) {
+        service.deleteTeacherById(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
     @PutMapping("/{id}/taskamount")
