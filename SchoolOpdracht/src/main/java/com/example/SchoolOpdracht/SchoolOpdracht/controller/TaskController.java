@@ -37,12 +37,12 @@ public class TaskController {
         return ResponseEntity.ok(service.getFilesByTask(id));
     }
 
-    @GetMapping("/checkDueDate/{id}")
+    @GetMapping("/{id}/dueDate")
     public ResponseEntity<Boolean> checkIfTaskIsOverdue(@PathVariable Long id) {
         return ResponseEntity.ok(service.checkIfTaskIsOverdue(id));
     }
 
-    @GetMapping("/daysBeforeOverDue/{id}")
+    @GetMapping("{id}/daysBeforeOverDue")
     public ResponseEntity<Long> getAmountOfDays(@PathVariable Long id) {
         return ResponseEntity.ok(service.getDayBeforeOverdue(id));
     }
@@ -59,7 +59,7 @@ public class TaskController {
         return ResponseEntity.created(uri).body("Task Created");
     }
 
-    @PutMapping("/changeTeacher/{id}")
+    @PutMapping("/{id}/teacher")
     public ResponseEntity<Long> changeTeacher(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
@@ -67,7 +67,7 @@ public class TaskController {
         return ResponseEntity.ok(service.changeAssignedTeacher(id, taskDto));
     }
 
-    @PutMapping("/updateStatus/{id}")
+    @PutMapping("/{id}/status")
     public ResponseEntity updateTaskStatus(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
@@ -75,7 +75,7 @@ public class TaskController {
         return ResponseEntity.ok(service.changeTaskStatus(id, taskDto));
     }
 
-    @PutMapping("/updateDueDate/{id}")
+    @PutMapping("{id}/dueDate")
     public ResponseEntity updateDueDate(@Valid @RequestBody TaskDto taskDto, @PathVariable Long id, BindingResult br) {
         if (br.hasErrors()) {
             return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);

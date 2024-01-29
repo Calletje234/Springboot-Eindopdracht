@@ -52,7 +52,7 @@ public class ParentController {
         return ResponseEntity.created(uri).body("Parent Created");
     }
 
-    @PutMapping("/changeFirstName/{id}")
+    @PutMapping("/{id}/firstName")
     public ResponseEntity changeFirstName(@Valid @RequestBody ParentDto parentDto,
                                           @PathVariable Long id,
                                           BindingResult br) {
@@ -62,7 +62,7 @@ public class ParentController {
         return ResponseEntity.ok(service.changeFirstName(id, parentDto));
     }
 
-    @PutMapping("/changeLastName/{id}")
+    @PutMapping("/{id}/lastName")
     public ResponseEntity changeLastName(@Valid @RequestBody ParentDto parentDto,
                                          @PathVariable Long id,
                                          BindingResult br) {
@@ -72,7 +72,7 @@ public class ParentController {
         return ResponseEntity.ok(service.changeLastName(id, parentDto));
     }
 
-    @PutMapping("/changePhoneNumber/{id}")
+    @PutMapping("/{id}/phoneNumber")
     public ResponseEntity changePhoneNumber(@Valid @RequestBody ParentDto parentDto,
                                             @PathVariable Long id,
                                             BindingResult br) {
@@ -82,7 +82,7 @@ public class ParentController {
         return ResponseEntity.ok(service.changePhoneNumber(id, parentDto));
     }
 
-    @PutMapping("/changeAddress/{id}")
+    @PutMapping("/{id}/address")
     public ResponseEntity changeAddress(@Valid @RequestBody ParentDto parentDto,
                                         @PathVariable Long id,
                                         BindingResult br) {
@@ -92,7 +92,7 @@ public class ParentController {
         return ResponseEntity.ok(service.changeAddress(id, parentDto));
     }
 
-    @PutMapping("/changeCountryOfOrigin/{id}")
+    @PutMapping("/{id}/countryOfOrigin")
     public ResponseEntity changeCountryOfOrigin(@Valid @RequestBody ParentDto parentDto,
                                                 @PathVariable Long id,
                                                 BindingResult br) {
@@ -102,7 +102,7 @@ public class ParentController {
         return ResponseEntity.ok(service.changeCountryOfOrigin(id, parentDto));
     }
 
-    @PutMapping("/changeSpokenLanguage/{id}")
+    @PutMapping("/{id}/spokenLanguage")
     public ResponseEntity changeSpokenLanguage(@Valid @RequestBody ParentDto parentDto,
                                                @PathVariable Long id,
                                                BindingResult br) {

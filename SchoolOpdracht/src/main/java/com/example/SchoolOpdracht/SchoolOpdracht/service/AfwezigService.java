@@ -98,7 +98,6 @@ public class AfwezigService {
     public Afwezig getAfwezigFromRepository(Long id) {
         return Util.checkAndFindById(id, repos)
                 .orElseThrow(() -> new RecordNotFoundException("Afwezig Record not found with ID: " + id));
-
     }
 
     public Teacher getTeacherFromRepository(Long id) {

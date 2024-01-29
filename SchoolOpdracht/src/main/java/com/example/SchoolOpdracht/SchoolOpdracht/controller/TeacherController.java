@@ -35,7 +35,7 @@ public class TeacherController {
         return ResponseEntity.ok(service.getTeacherById(id));
     }
 
-    @GetMapping("/getTasks/{id}")
+    @GetMapping("/{id}/tasks")
     public ResponseEntity<List<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestParam String taskStatus) {
         return ResponseEntity.ok(service.getTasksWithStatus(id, taskStatus));
     }
@@ -64,7 +64,7 @@ public class TeacherController {
         return ResponseEntity.ok(service.deleteTeacherById(id));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/taskamount")
     public ResponseEntity addTaskAmount(@Valid @RequestBody Long taskId,
                                         @PathVariable Long id,
                                         BindingResult br) {
@@ -74,7 +74,7 @@ public class TeacherController {
         return ResponseEntity.ok(service.addTaskToTeacher(id, taskId));
     }
 
-    @PutMapping("/changeFirstName/{id}")
+    @PutMapping("/{id}/firstName")
     public ResponseEntity changeTeacherFirstName(@Valid @RequestBody TeacherDto teacherDto,
                                                  @PathVariable Long id,
                                                  BindingResult br) {
@@ -84,7 +84,7 @@ public class TeacherController {
         return ResponseEntity.ok(service.changeFirstName(id, teacherDto));
     }
 
-    @PutMapping("/changeLastName/{id}")
+    @PutMapping("/{id}/lastName")
     public ResponseEntity changeTeacherLastName(@Valid @RequestBody TeacherDto teacherDto,
                                                 @PathVariable Long id,
                                                 BindingResult br) {
