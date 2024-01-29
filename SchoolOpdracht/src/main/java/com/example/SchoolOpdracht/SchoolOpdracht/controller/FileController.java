@@ -1,10 +1,8 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
-import com.example.SchoolOpdracht.SchoolOpdracht.dto.AfwezigDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.FileService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
