@@ -38,8 +38,13 @@ public class TaskController {
     }
 
     @GetMapping("/{id}/dueDate")
-    public ResponseEntity<Boolean> checkIfTaskIsOverdue(@PathVariable Long id) {
-        return ResponseEntity.ok(service.checkIfTaskIsOverdue(id));
+    public ResponseEntity<String> checkIfTaskIsOverdue(@PathVariable Long id) {
+        boolean task = service.checkIfTaskIsOverdue(id);
+        if (task) {
+            return ResponseEntity.ok("Task is overdue");
+        } else {
+            return ResponseEntity.ok("Task is valid");
+        }
     }
 
     @GetMapping("{id}/daysBeforeOverDue")

@@ -18,12 +18,16 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Parent;
 
 
+import net.bytebuddy.asm.Advice;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 
 @Service
@@ -160,10 +164,9 @@ public class TaskService {
     }
 
     public Boolean checkIfTaskIsOverdue(Long id) {
-        Task taskToCheck = getTaskFromRepository(id);
-        LocalDate tasksDueDate = taskToCheck.getDueDate();
-        LocalDate todaysDate = LocalDate.now();
-        return !tasksDueDate.isBefore(todaysDate);
+        Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
+        Optional<Task> newTask = repos.findByIdAndCheckOverDue(id, today);
+        return newTask.isPresent();
     }
 
     public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {

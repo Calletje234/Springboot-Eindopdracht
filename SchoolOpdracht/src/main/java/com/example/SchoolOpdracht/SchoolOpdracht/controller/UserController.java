@@ -1,58 +1,65 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
-import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.NoRoleFoundException;
-import com.example.SchoolOpdracht.SchoolOpdracht.repository.RoleRepository;
-import com.example.SchoolOpdracht.SchoolOpdracht.repository.UserRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.UserDto;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.Role;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.User;
+import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
+import com.example.SchoolOpdracht.SchoolOpdracht.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import javax.validation.Valid;
+import java.net.URI;
 
 @RestController
+@RequestMapping("/users")
 public class UserController {
 
-    private final UserRepository userRepos;
-    private final RoleRepository roleRepos;
-    private final PasswordEncoder encoder;
+    private final UserService service;
 
-    public UserController(UserRepository userRepos, RoleRepository roleRepos, PasswordEncoder encoder) {
-        this.userRepos = userRepos;
-        this.roleRepos = roleRepos;
-        this.encoder = encoder;
+    public UserController(UserService s) {
+        this.service = s;
     }
-    @PostMapping("/users")
-    public String createUser(@RequestBody UserDto userDto) {
-        User newUser = new User();
-        newUser.setUsername(userDto.username);
-        newUser.setPassword(encoder.encode(userDto.password));
 
-        List<Role> userRoles = new ArrayList<>();
-        for (String rolename : userDto.roles) {
-            Optional<Role> or = roleRepos.findById(rolename);
-            if(or.isEmpty()){
-                throw new NoRoleFoundException("No role found with name: " + rolename);
-            } else {
-                userRoles.add(or.get());
-            }
+    @PostMapping("")
+    public ResponseEntity<String> createUser(@Valid @RequestBody UserDto userDto, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
         }
-        newUser.setRoles(userRoles);
+        
+        Long createdId = service.createNewUser(userDto);
 
-        userRepos.save(newUser);
+        URI uri = URI.create(
+                ServletUriComponentsBuilder.
+                        fromCurrentContextPath().
+                        path("/users/" + createdId).toUriString());
+        return ResponseEntity.created(uri).body("User created");
+    }
 
-        return "Done";
+    @GetMapping("")
+    public ResponseEntity<Iterable<UserDto>> getAllUsers() {
+        return ResponseEntity.ok(service.getAllUsers());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDto> getUserById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getUserById(id));
+    }
+
+    @PutMapping("/{id}/addRoles")
+    public ResponseEntity<UserDto> addRoleToUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto, BindingResult br) {
+        if (br.hasErrors()) {
+            return new ResponseEntity(Util.createErrorMessage(br), HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(service.addRoleToUser(id, userDto));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteUser(@PathVariable Long id) {
+        service.deleteUserById(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }
