@@ -49,7 +49,7 @@ public class OpmerkingController {
         return ResponseEntity.created(uri).body("Opmerking created");
     }
 
-    @PutMapping("/changeOpmerking/{id}")
+    @PutMapping("/{id}/Opmerking")
     public ResponseEntity changeOpmerking(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
                                           @PathVariable Long id,
                                           BindingResult br) {
@@ -59,7 +59,7 @@ public class OpmerkingController {
         return ResponseEntity.ok(service.changeOpmerking(id, opmerkingenDto));
     }
 
-    @PutMapping("/changeContactDate/{id}")
+    @PutMapping("/{id}/contactDate")
     public ResponseEntity changeContactDate(@Valid @RequestBody OpmerkingenDto opmerkingenDto,
                                             @PathVariable Long id,
                                             BindingResult br) {

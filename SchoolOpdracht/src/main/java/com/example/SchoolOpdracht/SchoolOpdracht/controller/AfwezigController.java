@@ -37,7 +37,6 @@ public class AfwezigController {
         return ResponseEntity.ok(service.getFileByAfwezigMelding(id));
     }
 
-
     @PostMapping("")
     public ResponseEntity<String> createAfwezig(@Valid @RequestBody AfwezigDto afwezigDto, BindingResult br){
         Long createdId = service.createAfwezigPeriod(afwezigDto);
@@ -49,7 +48,7 @@ public class AfwezigController {
         return ResponseEntity.created(uri).body("Afwezigheid period created");
     }
 
-    @PutMapping("/changeReason/{id}")
+    @PutMapping("/{id}/reason")
     public ResponseEntity changeAfwezigReason(@Valid @RequestBody AfwezigDto afwezigDto,
                                                       @PathVariable Long id,
                                                       BindingResult br) {
@@ -60,7 +59,7 @@ public class AfwezigController {
 
     }
 
-    @PutMapping("/changeEndingDate/{id}")
+    @PutMapping("/{id}/endingDate")
     public ResponseEntity changeEndingDate(@Valid @RequestBody AfwezigDto afwezigDto,
                                            @PathVariable Long id,
                                            BindingResult br) {
@@ -70,7 +69,7 @@ public class AfwezigController {
         return ResponseEntity.ok(service.changeEndingDate(id, afwezigDto));
     }
 
-    @PutMapping("/changeStartingDate/{id}")
+    @PutMapping("/{id}/startingDate")
     public ResponseEntity changeStartingDate(@Valid @RequestBody AfwezigDto afwezigDto,
                                              @PathVariable Long id,
                                              BindingResult br) {

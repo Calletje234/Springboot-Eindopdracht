@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.NoRoleFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.RoleRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.UserRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.UserDto;
@@ -37,8 +38,11 @@ public class UserController {
         List<Role> userRoles = new ArrayList<>();
         for (String rolename : userDto.roles) {
             Optional<Role> or = roleRepos.findById(rolename);
-
-            userRoles.add(or.get());
+            if(or.isEmpty()){
+                throw new NoRoleFoundException("No role found with name: " + rolename);
+            } else {
+                userRoles.add(or.get());
+            }
         }
         newUser.setRoles(userRoles);
 

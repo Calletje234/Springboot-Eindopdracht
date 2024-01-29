@@ -1,7 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.File;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ChildDto;
@@ -40,7 +40,7 @@ public class ChildService {
         newChild.setSpokenLanguage(childDto.spokenLanguage);
         newChild.setAllergies(childDto.Allergies);
         newChild.setCountryOfOrigin(childDto.countryOfOrigin);
-        newChild.setParent(getParentRepos(childDto.parentId));
+        newChild.setParent(getParentFromRepository(childDto.parentId));
 
         Child savedChild = repos.save(newChild);
 
@@ -63,7 +63,7 @@ public class ChildService {
     }
 
     public ChildDto getChildById(Long id) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         return createReturnDto(requestedChild);
     }
 
@@ -71,51 +71,50 @@ public class ChildService {
         return fileService.getAssociatedFiled("Child", id);
     }
 
-
     public ChildDto changeFirstName(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setFirstName(childDto.firstName);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeLastName(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setLastName(childDto.lastName);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeDateOfBirth(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setDob(childDto.dob);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeAddress(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setAddress(childDto.address);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeCountryOfOrigin(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setCountryOfOrigin(childDto.countryOfOrigin);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeSpokenLanguage(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setSpokenLanguage(childDto.spokenLanguage);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto addAllergies(Long id, String addedAllergies) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         ArrayList<String> oldAllergies = requestedChild.getAllergies();
         oldAllergies.add(addedAllergies);
         requestedChild.setAllergies(oldAllergies);
@@ -124,15 +123,15 @@ public class ChildService {
     }
 
     public ChildDto changeStartingDate(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
+        Child requestedChild = getChildFromRepository(id);
         requestedChild.setStartingDate(childDto.startingDate);
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
 
     public ChildDto changeParent(Long id, ChildDto childDto) {
-        Child requestedChild = getChildRepos(id);
-        requestedChild.setParent(getParentRepos(childDto.parentId));
+        Child requestedChild = getChildFromRepository(id);
+        requestedChild.setParent(getParentFromRepository(childDto.parentId));
         repos.save(requestedChild);
         return createReturnDto(requestedChild);
     }
@@ -161,19 +160,19 @@ public class ChildService {
     }
 
     public ChildDto removeChildById(Long id) {
-        Util.checkId(id, repos);
-        Child deletedChild = getChildRepos(id);
+        Child deletedChild = getChildFromRepository(id);
         repos.deleteById(id);
         return createReturnDto(deletedChild);
     }
 
-    public Child getChildRepos(Long id) {
-        Util.checkId(id, repos);
-        return repos.findById(id).get();
+    public Child getChildFromRepository(Long id) {
+        return Util.checkAndFindById(id, repos)
+                .orElseThrow(() -> new RecordNotFoundException("Child Record not found with id: " + id));
+
     }
 
-    public Parent getParentRepos(Long id) {
-        Util.checkId(id, parentRepos);
-        return parentRepos.findById(id).get();
+    public Parent getParentFromRepository(Long id) {
+        return Util.checkAndFindById(id, parentRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Parent Record not found with id: " + id));
     }
 }

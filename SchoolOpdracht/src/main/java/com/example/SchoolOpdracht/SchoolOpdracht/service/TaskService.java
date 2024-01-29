@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
@@ -31,7 +32,7 @@ public class TaskService {
     private final TeacherRepository teacherRepos;
     private final ChildRepository childRepos;
     private final ParentRepository parentRepos;
-    private final FileService fileService
+    private final FileService fileService;
 
     // constructor injection
     public TaskService(TaskRepository r, TeacherRepository t, ChildRepository c, ParentRepository p, FileService f) {
@@ -47,10 +48,10 @@ public class TaskService {
         LocalDate dueDate = taskDto.dueDate.plusWeeks(6);
         // map dto to entity
         newTask.setDueDate(dueDate);
-        newTask.setChild(getChildRepos(taskDto.childId));
+        newTask.setChild(getChildFromRepository(taskDto.childId));
         newTask.setAssigned(taskDto.assigned);
         if(taskDto.teacherId != null) {
-            newTask.setTeacher(getTeacherRepos(taskDto.teacherId));
+            newTask.setTeacher(getTeacherFromRepository(taskDto.teacherId));
         }
 
         Task savedTask = repos.save(newTask);
@@ -70,8 +71,7 @@ public class TaskService {
     }
 
     public TaskDto getTaskById(Long id) {
-        Util.checkId(id, repos);
-        Task requestedTask = repos.findById(id).get();
+        Task requestedTask = getTaskFromRepository(id);
         return createReturnDto(requestedTask);
     }
 
@@ -80,40 +80,42 @@ public class TaskService {
     }
 
     public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
-        Task taskToChange = getTaskRepos(taskId);
+        Task taskToChange = getTaskFromRepository(taskId);
         taskToChange.setStatus(taskDto.status);
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
 
     public TaskDto changeDueDate(Long taskId, TaskDto taskDto) {
-        Task taskToChange = getTaskRepos(taskId);
+        Task taskToChange = getTaskFromRepository(taskId);
         taskToChange.setDueDate(taskDto.dueDate);
         repos.save(taskToChange);
         return createReturnDto(taskToChange);
     }
 
     public Long changeAssignedTeacher(Long taskId, TaskDto taskDto) {
-        Task taskToChange = getTaskRepos(taskId);
-        taskToChange.setTeacher(getTeacherRepos(taskDto.teacherId));
+        Task taskToChange = getTaskFromRepository(taskId);
+        taskToChange.setTeacher(getTeacherFromRepository(taskDto.teacherId));
         repos.save(taskToChange);
         return taskToChange.getTeacher().getTeacherId();
     }
 
     public TaskDto deleteTaskById(Long taskId) {
-        Task deletedTask = getTaskRepos(taskId);
+        Task deletedTask = getTaskFromRepository(taskId);
         repos.deleteById(taskId);
         return createReturnDto(deletedTask);
     }
 
     public ChildDto getChildInformation(Long taskId) {
-        Task requestedTask = getTaskRepos(taskId);
-        return createChildReturnDto(getChildRepos(requestedTask.getChild().getChildId()));
+        Task requestedTask = getTaskFromRepository(taskId);
+        return createChildReturnDto(getChildFromRepository(requestedTask.getChild().getChildId()));
     }
 
     public ParentDto getParentOfTaskChild(Long taskId) {
-        Task requestedTask = getTaskRepos(taskId);
-        return createParentReturnDto(requestedTask.getChild().getParent());
+        Task requestedTask = getTaskFromRepository(taskId);
+        Child coupledChild = getChildFromRepository(requestedTask.getChild().getChildId());
+        Parent coupledParent = getParentFromRepository(coupledChild.getParent().getParentId());
+        return createParentReturnDto(coupledParent);
     }
 
     public TaskDto createReturnDto(Task changedModel) {
@@ -151,21 +153,21 @@ public class TaskService {
     }
 
     public long getDayBeforeOverdue(Long id) {
-        Task taskToCheck = getTaskRepos(id);
+        Task taskToCheck = getTaskFromRepository(id);
         LocalDate taskDueDate = taskToCheck.getDueDate();
         LocalDate todaysDate = LocalDate.now();
         return ChronoUnit.DAYS.between(taskDueDate, todaysDate);
     }
 
     public Boolean checkIfTaskIsOverdue(Long id) {
-        Task taskToCheck = getTaskRepos(id);
+        Task taskToCheck = getTaskFromRepository(id);
         LocalDate tasksDueDate = taskToCheck.getDueDate();
         LocalDate todaysDate = LocalDate.now();
         return !tasksDueDate.isBefore(todaysDate);
     }
 
     public Boolean checkIfTeacherIValid(Long teacherId, LocalDate dueDate) {
-        Teacher teacherToAssign = getTeacherRepos(teacherId);
+        Teacher teacherToAssign = getTeacherFromRepository(teacherId);
         List<Afwezig> teacherAfwezigList = teacherToAssign.getAfwezigheid();
         for (Afwezig afwezigList : teacherAfwezigList) {
             if (dueDate.isAfter(afwezigList.getStartDate()) && dueDate.isBefore(afwezigList.getEndDate())) {
@@ -175,23 +177,23 @@ public class TaskService {
         return true;
     }
 
-    public Task getTaskRepos(Long id) {
-        Util.checkId(id, repos);
-        return repos.findById(id).get();
+    public Task getTaskFromRepository(Long id) {
+        return Util.checkAndFindById(id, repos)
+                .orElseThrow(() -> new RecordNotFoundException("Task Record not found with id: " + id));
     }
 
-    public Teacher getTeacherRepos(Long id) {
-        Util.checkId(id, teacherRepos);
-        return teacherRepos.findById(id).get();
+    public Teacher getTeacherFromRepository(Long id) {
+        return Util.checkAndFindById(id, teacherRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Teacher Record not found with id: " + id));
     }
 
-    public Child getChildRepos(Long id) {
-        Util.checkId(id, childRepos);
-        return childRepos.findById(id).get();
+    public Child getChildFromRepository(Long id) {
+        return Util.checkAndFindById(id, childRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Child Record not found with id: " + id));
     }
 
-    public Parent getParentRepos(Long id) {
-        Util.checkId(id, parentRepos);
-        return parentRepos.findById(id).get();
+    public Parent getParentFromRepository(Long id) {
+        return Util.checkAndFindById(id, parentRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Parent Record not found with id: " + id));
     }
 }

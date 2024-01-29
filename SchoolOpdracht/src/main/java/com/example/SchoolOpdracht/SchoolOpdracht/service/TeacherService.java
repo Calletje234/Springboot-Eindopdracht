@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.TeacherStillHasTaskException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
@@ -53,7 +54,7 @@ public class TeacherService {
     }
 
     public TeacherDto getTeacherById(Long id) {
-        Teacher requestedTeacher = getTeacherRepos(id);
+        Teacher requestedTeacher = getTeacherFromRepository(id);
         return getReturnTeacherDto(requestedTeacher);
     }
 
@@ -62,19 +63,19 @@ public class TeacherService {
     }
 
     public TeacherDto changeFirstName(Long id, TeacherDto teacherDto) {
-        Teacher teacherToChange = getTeacherRepos(id);
+        Teacher teacherToChange = getTeacherFromRepository(id);
         teacherToChange.setFirstName(teacherDto.firstName);
         repos.save(teacherToChange);
         return getReturnTeacherDto(teacherToChange);
     }
 
     public int getTaskAmount(Long id) {
-        Teacher requestedTeacher = getTeacherRepos(id);
+        Teacher requestedTeacher = getTeacherFromRepository(id);
         return requestedTeacher.getTaskAmount();
     }
 
     public List<TaskDto> getTasksWithStatus(Long id, String status) {
-        Teacher requestedTeacher = getTeacherRepos(id);
+        Teacher requestedTeacher = getTeacherFromRepository(id);
         List<Task> allTask = requestedTeacher.getTasks();
         List<TaskDto> allTaskDto = new ArrayList<>();
         for(Task task : allTask) {
@@ -90,15 +91,15 @@ public class TeacherService {
     }
 
     public TeacherDto changeLastName(Long id, TeacherDto teacherDto) {
-        Teacher teacherToChange = getTeacherRepos(id);
+        Teacher teacherToChange = getTeacherFromRepository(id);
         teacherToChange.setLastName(teacherDto.lastName);
         repos.save(teacherToChange);
         return getReturnTeacherDto(teacherToChange);
     }
 
     public TeacherDto addTaskToTeacher(Long id, Long taskId) {
-        Teacher teacherForTaskAdd = getTeacherRepos(id);
-        Task taskToAdd = getTaskRepos(taskId);
+        Teacher teacherForTaskAdd = getTeacherFromRepository(id);
+        Task taskToAdd = getTaskFromRepository(taskId);
         List<Task> teacherTaskCopy = teacherForTaskAdd.getTasks();
         int taskAmountCopy = teacherForTaskAdd.getTaskAmount();
         teacherTaskCopy.add(taskToAdd);
@@ -109,7 +110,7 @@ public class TeacherService {
     }
 
     public TeacherDto deleteTeacherById(Long id) {
-        Teacher deletedTeacher = getTeacherRepos(id);
+        Teacher deletedTeacher = getTeacherFromRepository(id);
         List<Task> tasks = deletedTeacher.getTasks();
         if (!tasks.isEmpty()) {
             throw new TeacherStillHasTaskException("Teacher still has tasks assigned");
@@ -137,13 +138,13 @@ public class TeacherService {
         return dtoToCreate;
     }
 
-    public Teacher getTeacherRepos(Long id) {
-        Util.checkId(id, repos);
-        return repos.findById(id).get();
+    public Teacher getTeacherFromRepository(Long id) {
+        return Util.checkAndFindById(id, repos)
+                .orElseThrow(() -> new RecordNotFoundException("Teacher Record not found with id: " + id));
     }
 
-    public Task getTaskRepos(Long id) {
-        Util.checkId(id, taskRepos);
-        return taskRepos.findById(id).get();
+    public Task getTaskFromRepository(Long id) {
+        return Util.checkAndFindById(id, taskRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Task Record not found with id: " + id));
     }
 }

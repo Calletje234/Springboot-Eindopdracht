@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
@@ -48,7 +49,7 @@ public class ParentService {
     }
 
     public ParentDto getParentById(Long id) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         return createReturnDto(requestedParent);
     }
 
@@ -57,49 +58,49 @@ public class ParentService {
     }
 
     public ParentDto changeFirstName(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setFirstName(parentDto.firstName);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto changeLastName(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setLastName(parentDto.lastName);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto changePhoneNumber(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setPhoneNumber(parentDto.phoneNumber);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto changeAddress(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setAddress(parentDto.address);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto changeCountryOfOrigin(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setCountryOfOrigin(parentDto.countryOfOrigin);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto changeSpokenLanguage(Long id, ParentDto parentDto) {
-        Parent requestedParent = getParentRepos(id);
+        Parent requestedParent = getParentFromRepository(id);
         requestedParent.setSpokenLanguage(parentDto.spokenLanguage);
         repos.save(requestedParent);
         return createReturnDto(requestedParent);
     }
 
     public ParentDto deleteParentById(Long id) {
-        Parent deletedParent = getParentRepos(id);
+        Parent deletedParent = getParentFromRepository(id);
         repos.deleteById(id);
         return createReturnDto(deletedParent);
     }
@@ -115,9 +116,9 @@ public class ParentService {
         return requestedDto;
     }
 
-    public Parent getParentRepos(Long id) {
-        Util.checkId(id, repos);
-        return repos.findById(id).get();
+    public Parent getParentFromRepository(Long id) {
+        return Util.checkAndFindById(id, repos)
+                .orElseThrow(() -> new RecordNotFoundException("Parent Record not found by id: " + id));
     }
 
 }

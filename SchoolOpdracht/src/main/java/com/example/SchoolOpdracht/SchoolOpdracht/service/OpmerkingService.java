@@ -2,12 +2,11 @@ package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
-import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 
 import org.springframework.stereotype.Service;
 
@@ -18,13 +17,11 @@ import java.util.List;
 public class OpmerkingService {
 
     private final OpmerkingenRepository repos;
-    private final TaskRepository taskRepos;
     private final FileService fileService;
 
     // constructor injection
-    public OpmerkingService(OpmerkingenRepository r, TaskRepository t, FileService f) {
+    public OpmerkingService(OpmerkingenRepository r, FileService f) {
         this.repos = r;
-        this.taskRepos = t;
         this.fileService = f;
     }
 
@@ -49,8 +46,7 @@ public class OpmerkingService {
     }
 
     public OpmerkingenDto getOpmerkingById(Long id) {
-        Util.checkId(id, repos);
-        Opmerkingen requestedOpmerking = repos.findById(id).get();
+        Opmerkingen requestedOpmerking = getOpmerkingFromRepository(id);
         return createReturnDto(requestedOpmerking);
     }
 
@@ -59,24 +55,21 @@ public class OpmerkingService {
     }
 
     public OpmerkingenDto changeOpmerking(Long id, OpmerkingenDto opmerkingenDto) {
-        Util.checkId(id, repos);
-        Opmerkingen requestOpmerking = repos.findById(id).get();
+        Opmerkingen requestOpmerking = getOpmerkingFromRepository(id);
         requestOpmerking.setOpmerking(opmerkingenDto.opmerking);
         repos.save(requestOpmerking);
         return createReturnDto(requestOpmerking);
     }
 
     public OpmerkingenDto changeContactDate(Long id, OpmerkingenDto opmerkingenDto) {
-        Util.checkId(id, repos);
-        Opmerkingen requestOpmerking = repos.findById(id).get();
+        Opmerkingen requestOpmerking = getOpmerkingFromRepository(id);
         requestOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
         repos.save(requestOpmerking);
         return createReturnDto(requestOpmerking);
     }
 
     public OpmerkingenDto deleteOpmerkingById(Long id) {
-        Util.checkId(id, repos);
-        Opmerkingen deletedOpmerking = repos.findById(id).get();
+        Opmerkingen deletedOpmerking = getOpmerkingFromRepository(id);
         repos.deleteById(id);
         return createReturnDto(deletedOpmerking);
     }
@@ -88,13 +81,8 @@ public class OpmerkingService {
         return requestDto;
     }
 
-    public Task getTaskRepos(Long id) {
-        Util.checkId(id, taskRepos);
-        return taskRepos.findById(id).get();
-    }
-
-    public Opmerkingen getOpmerkingRepos(Long id) {
-        Util.checkId(id, repos);
-        return repos.findById(id).get();
+    public Opmerkingen getOpmerkingFromRepository(Long id) {
+        return Util.checkAndFindById(id, repos)
+                .orElseThrow(() -> new RecordNotFoundException("Opmerking Record not found with id: " + id));
     }
 }
