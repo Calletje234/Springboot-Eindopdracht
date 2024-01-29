@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
@@ -11,17 +12,20 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class OpmerkingService {
 
     private final OpmerkingenRepository repos;
     private final TaskRepository taskRepos;
+    private final FileService fileService;
 
     // constructor injection
-    public OpmerkingService(OpmerkingenRepository r, TaskRepository t) {
+    public OpmerkingService(OpmerkingenRepository r, TaskRepository t, FileService f) {
         this.repos = r;
         this.taskRepos = t;
+        this.fileService = f;
     }
 
     public Long createOpmerking(OpmerkingenDto opmerkingenDto) {
@@ -48,6 +52,10 @@ public class OpmerkingService {
         Util.checkId(id, repos);
         Opmerkingen requestedOpmerking = repos.findById(id).get();
         return createReturnDto(requestedOpmerking);
+    }
+
+    public List<FileDto> getFileByOpmerking(Long id) {
+        return fileService.getAssociatedFiled("Opmerking", id);
     }
 
     public OpmerkingenDto changeOpmerking(Long id, OpmerkingenDto opmerkingenDto) {

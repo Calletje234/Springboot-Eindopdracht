@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.TeacherStillHasTaskException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 
 @Service
@@ -20,11 +22,13 @@ public class TeacherService {
 
     private final TeacherRepository repos;
     private final TaskRepository taskRepos;
+    private final FileService fileService;
 
     // constructor injection (instead of @Autowired)
-    public TeacherService(TeacherRepository r, TaskRepository t) {
+    public TeacherService(TeacherRepository r, TaskRepository t, FileService f) {
         this.repos = r;
         this.taskRepos = t;
+        this.fileService = f;
     }
 
     public Long createTeacher(TeacherDto teacherDto) {
@@ -53,6 +57,10 @@ public class TeacherService {
         return getReturnTeacherDto(requestedTeacher);
     }
 
+    public List<FileDto> getFileByTeacher(Long id) {
+        return fileService.getAssociatedFiled("Teacher", id);
+    }
+
     public TeacherDto changeFirstName(Long id, TeacherDto teacherDto) {
         Teacher teacherToChange = getTeacherRepos(id);
         teacherToChange.setFirstName(teacherDto.firstName);
@@ -70,15 +78,12 @@ public class TeacherService {
         List<Task> allTask = requestedTeacher.getTasks();
         List<TaskDto> allTaskDto = new ArrayList<>();
         for(Task task : allTask) {
-            if(status.equals("running") && task.getStatus().equals("running")) {
+            if(task.getStatus().equals(status)) {
                 TaskDto retrievedTask = getTaskDto(task);
                 allTaskDto.add(retrievedTask);
-            } else if(status.equals("closed") && task.getStatus().equals("closed")) {
+            } else if (Objects.equals(status, "")) {
                 TaskDto retrievedTask = getTaskDto(task);
                 allTaskDto.add(retrievedTask);
-            } else {
-                TaskDto retrieveTask = getTaskDto(task);
-                allTaskDto.add(retrieveTask);
             }
         }
         return allTaskDto;

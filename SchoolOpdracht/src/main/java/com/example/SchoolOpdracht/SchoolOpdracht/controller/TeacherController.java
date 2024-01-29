@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.TeacherDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
@@ -37,6 +38,11 @@ public class TeacherController {
     @GetMapping("/getTasks/{id}")
     public ResponseEntity<List<TaskDto>> getTasksOfTeacherById(@PathVariable Long id, @RequestParam String taskStatus) {
         return ResponseEntity.ok(service.getTasksWithStatus(id, taskStatus));
+    }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssociatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFileByTeacher(id));
     }
 
     @PostMapping("")

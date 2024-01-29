@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.AfwezigRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TeacherRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.AfwezigDto;
@@ -11,16 +12,19 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.Teacher;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class AfwezigService {
     private final AfwezigRepository repos;
     private final TeacherRepository teacherRepos;
+    private final FileService fileService;
 
     //constructor injection
-    public AfwezigService(AfwezigRepository r, TeacherRepository tr) {
+    public AfwezigService(AfwezigRepository r, TeacherRepository tr, FileService fs) {
         this.repos = r;
         this.teacherRepos = tr;
+        this.fileService = fs;
     }
 
     public Long createAfwezigPeriod(AfwezigDto afwezigDto) {
@@ -43,6 +47,10 @@ public class AfwezigService {
             resultList.add(createReturnDto(a));
         }
         return resultList;
+    }
+
+    public List<FileDto> getFileByAfwezigMelding(Long id) {
+        return fileService.getAssociatedFiled("Afwezig", id);
     }
 
     public AfwezigDto getAfwezigById(Long id) {

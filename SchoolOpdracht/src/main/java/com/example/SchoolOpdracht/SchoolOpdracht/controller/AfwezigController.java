@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.AfwezigDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.AfwezigService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/afwezig")
@@ -29,6 +31,12 @@ public class AfwezigController {
     public ResponseEntity<AfwezigDto> getAfwezigById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getAfwezigById(id));
     }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssoicatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFileByAfwezigMelding(id));
+    }
+
 
     @PostMapping("")
     public ResponseEntity<String> createAfwezig(@Valid @RequestBody AfwezigDto afwezigDto, BindingResult br){

@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
@@ -30,13 +31,15 @@ public class TaskService {
     private final TeacherRepository teacherRepos;
     private final ChildRepository childRepos;
     private final ParentRepository parentRepos;
+    private final FileService fileService
 
     // constructor injection
-    public TaskService(TaskRepository r, TeacherRepository t, ChildRepository c, ParentRepository p) {
+    public TaskService(TaskRepository r, TeacherRepository t, ChildRepository c, ParentRepository p, FileService f) {
         this.repos = r;
         this.teacherRepos = t;
         this.childRepos = c;
         this.parentRepos = p;
+        this.fileService = f;
     }
 
     public Long createTask(TaskDto taskDto) {
@@ -45,6 +48,7 @@ public class TaskService {
         // map dto to entity
         newTask.setDueDate(dueDate);
         newTask.setChild(getChildRepos(taskDto.childId));
+        newTask.setAssigned(taskDto.assigned);
         if(taskDto.teacherId != null) {
             newTask.setTeacher(getTeacherRepos(taskDto.teacherId));
         }
@@ -69,7 +73,11 @@ public class TaskService {
         Util.checkId(id, repos);
         Task requestedTask = repos.findById(id).get();
         return createReturnDto(requestedTask);
-        }
+    }
+
+    public List<FileDto> getFilesByTask(Long id) {
+        return fileService.getAssociatedFiled("Task", id);
+    }
 
     public TaskDto changeTaskStatus(Long taskId, TaskDto taskDto) {
         Task taskToChange = getTaskRepos(taskId);

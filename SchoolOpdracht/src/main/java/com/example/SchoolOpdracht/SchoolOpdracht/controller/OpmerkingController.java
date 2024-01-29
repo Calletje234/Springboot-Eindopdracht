@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.OpmerkingService;
@@ -11,6 +12,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/opmerking")
@@ -29,6 +31,11 @@ public class OpmerkingController {
     @GetMapping("/{id}")
     public ResponseEntity<OpmerkingenDto> getOpmerkingById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getOpmerkingById(id));
+    }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssociatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFileByOpmerking(id));
     }
 
     @PostMapping("")

@@ -2,6 +2,7 @@ package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ChildDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.ChildService;
 import org.springframework.http.HttpStatus;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/childs")
@@ -32,6 +34,11 @@ public class ChildController {
         return ResponseEntity.ok(service.getChildById(id));
     }
 
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssociatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFileByChild(id));
+    }
+
     @PostMapping("")
     public ResponseEntity<String> createChild(@Valid @RequestBody ChildDto childDto, BindingResult br) {
         if(br.hasErrors()) {
@@ -42,7 +49,6 @@ public class ChildController {
         URI uri = URI.create(
                 ServletUriComponentsBuilder.fromCurrentContextPath().path("/children/" + createdId).toUriString());
         return ResponseEntity.created(uri).body("Child Created");
-
     }
 
     @PostMapping("/{id}/{Allergie}")

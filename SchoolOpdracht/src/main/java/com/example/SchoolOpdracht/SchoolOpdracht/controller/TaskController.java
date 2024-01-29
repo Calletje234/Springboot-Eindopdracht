@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.TaskDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.TaskService;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/tasks")
@@ -28,6 +30,11 @@ public class TaskController {
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getTaskById(id));
+    }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssociatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFilesByTask(id));
     }
 
     @GetMapping("/checkDueDate/{id}")

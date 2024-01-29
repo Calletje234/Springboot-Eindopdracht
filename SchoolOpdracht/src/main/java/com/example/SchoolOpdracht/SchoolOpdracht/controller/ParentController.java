@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.controller;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.service.ParentService;
@@ -12,6 +13,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
+import java.util.List;
 
 
 @RestController
@@ -31,6 +33,11 @@ public class ParentController {
     @GetMapping("/{id}")
     public ResponseEntity<ParentDto> getParentById(@PathVariable Long id) {
         return ResponseEntity.ok(service.getParentById(id));
+    }
+
+    @GetMapping("/{id}/files")
+    public ResponseEntity<List<FileDto>> getAssociatedFiles(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getFilesByParent(id));
     }
 
     @PostMapping("")

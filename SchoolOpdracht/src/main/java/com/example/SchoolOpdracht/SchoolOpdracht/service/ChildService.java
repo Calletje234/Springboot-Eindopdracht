@@ -1,5 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.File;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ChildDto;
@@ -10,17 +12,20 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.Parent;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ChildService {
     private final ChildRepository repos;
     private final ParentRepository parentRepos;
     private final TaskService taskService;
+    private final FileService fileService;
 
-    public ChildService(ChildRepository c, ParentRepository p, TaskService s) {
+    public ChildService(ChildRepository c, ParentRepository p, TaskService s, FileService f) {
         this.repos = c;
         this.parentRepos = p;
         this.taskService = s;
+        this.fileService = f;
     }
 
     public Iterable<Long> createChild(ChildDto childDto) {
@@ -61,6 +66,11 @@ public class ChildService {
         Child requestedChild = getChildRepos(id);
         return createReturnDto(requestedChild);
     }
+
+    public List<FileDto> getFileByChild(Long id) {
+        return fileService.getAssociatedFiled("Child", id);
+    }
+
 
     public ChildDto changeFirstName(Long id, ChildDto childDto) {
         Child requestedChild = getChildRepos(id);

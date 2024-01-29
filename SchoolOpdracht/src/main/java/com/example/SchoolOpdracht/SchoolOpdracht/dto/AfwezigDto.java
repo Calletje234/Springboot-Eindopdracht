@@ -4,9 +4,10 @@ import java.time.LocalDate;
 
 import javax.validation.constraints.Future;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 public class AfwezigDto {
-    @NotBlank
+    @NotNull
     public Long teacherId;
     @NotBlank
     public String reason;

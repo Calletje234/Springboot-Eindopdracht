@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
@@ -8,14 +9,19 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.Parent;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class ParentService {
 
     private final ParentRepository repos;
+    private final FileService fileService;
 
     // constructor injection
-    public ParentService(ParentRepository r) {this.repos = r;}
+    public ParentService(ParentRepository r, FileService f) {
+        this.repos = r;
+        this.fileService = f;
+    }
 
     public Long createParent(ParentDto parentDto) {
         Parent newParent = new Parent();
@@ -44,6 +50,10 @@ public class ParentService {
     public ParentDto getParentById(Long id) {
         Parent requestedParent = getParentRepos(id);
         return createReturnDto(requestedParent);
+    }
+
+    public List<FileDto> getFilesByParent(Long id) {
+        return fileService.getAssociatedFiled("Parent", id);
     }
 
     public ParentDto changeFirstName(Long id, ParentDto parentDto) {
