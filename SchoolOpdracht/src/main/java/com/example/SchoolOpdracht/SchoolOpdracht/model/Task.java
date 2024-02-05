@@ -1,6 +1,7 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.model;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,7 +20,7 @@ public class Task {
     private Long taskId;
 
     // Variables not mapped by other services
-    private String status;
+    private TaskStatus status;
     private LocalDate dueDate;
     private Boolean assigned;
 
@@ -34,7 +35,7 @@ public class Task {
     @OneToMany(mappedBy = "newTask")
     private List<Opmerkingen> opmerkingen;
 
-    public Task(String status, LocalDate dueDate, boolean assigned) {
+    public Task(TaskStatus status, LocalDate dueDate, boolean assigned) {
         this.status = status;
         this.dueDate = dueDate;
         this.assigned = assigned;

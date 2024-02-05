@@ -1,8 +1,10 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.TaskNotRightStatusException;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
@@ -106,6 +108,12 @@ public class TaskService {
 
     public TaskDto deleteTaskById(Long taskId) {
         Task deletedTask = getTaskFromRepository(taskId);
+        TaskStatus taskStatus = deletedTask.getStatus();
+        if ((taskStatus == TaskStatus.CLOSED) || taskStatus == TaskStatus.FINISHED){
+            repos.deleteById(taskId);
+        } else {
+            throw new TaskNotRightStatusException("Task with id: " + taskId + " hasn't right status. Must be 'CLOSED' or 'FINISHED'.");
+        }
         repos.deleteById(taskId);
         return createReturnDto(deletedTask);
     }
