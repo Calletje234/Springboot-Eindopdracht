@@ -51,8 +51,6 @@ public class SecurityConfig  {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/users").permitAll()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers("/secret").hasAuthority("ADMIN")
-                .antMatchers("/**").hasAnyAuthority("USER", "ADMIN")
                 .antMatchers(HttpMethod.POST, "/tasks").hasAnyAuthority("BEHANDELAAR", "ADMIN")
                 .antMatchers(HttpMethod.DELETE, "/tasks").hasAuthority("ADMIN")
                 .antMatchers(HttpMethod.PUT, "/tasks").hasAnyAuthority("BEHANDELAAR", "ADMIN")
