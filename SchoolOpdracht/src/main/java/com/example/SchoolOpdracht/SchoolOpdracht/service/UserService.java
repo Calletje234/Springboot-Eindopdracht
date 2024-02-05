@@ -8,6 +8,7 @@ import com.example.SchoolOpdracht.SchoolOpdracht.model.User;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.UserRepository;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class UserService {
@@ -41,6 +42,15 @@ public class UserService {
             resultList.add(createUserReturnDto(u));
         }
         return resultList;
+    }
+
+    public Iterable<UserDto> getAllUsersWithSpecificRole(String roleName) {
+        List<User> usersWithRole = repos.findUsersByRole(roleName);
+        List<UserDto> userList = new ArrayList<>();
+        for (User u : usersWithRole) {
+            userList.add(createUserReturnDto(u));
+        }
+        return userList;
     }
 
     public UserDto addRoleToUser(Long id, UserDto userDto) {

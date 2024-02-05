@@ -49,6 +49,11 @@ public class UserController {
         return ResponseEntity.ok(service.getUserById(id));
     }
 
+    @GetMapping("/{roleName}")
+    public ResponseEntity<Iterable<UserDto>> getAllUsersWithSpecificRole(@PathVariable String roleName) {
+        return ResponseEntity.ok(service.getAllUsersWithSpecificRole(roleName));
+    }
+
     @PutMapping("/{id}/addRoles")
     public ResponseEntity<UserDto> addRoleToUser(@PathVariable Long id, @Valid @RequestBody UserDto userDto, BindingResult br) {
         if (br.hasErrors()) {

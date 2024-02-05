@@ -15,6 +15,8 @@ import java.util.Collection;
 @Getter @Setter
 public class Role {
     @Id
+    private Long id;
+
     private String rolename;
 
     @ManyToMany(mappedBy = "roles")

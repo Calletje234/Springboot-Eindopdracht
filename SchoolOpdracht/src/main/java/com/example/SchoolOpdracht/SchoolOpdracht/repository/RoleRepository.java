@@ -3,5 +3,8 @@ package com.example.SchoolOpdracht.SchoolOpdracht.repository;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Role;
 import org.springframework.data.repository.CrudRepository;
 
-public interface RoleRepository extends CrudRepository<Role, String> {
+import java.util.Optional;
+
+public interface RoleRepository extends CrudRepository<Role, Long> {
+    Optional<Role> findByRoleName(String roleName);
 }
