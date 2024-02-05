@@ -3,11 +3,13 @@ package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -17,18 +19,23 @@ import java.util.List;
 public class OpmerkingService {
 
     private final OpmerkingenRepository repos;
+    private final TaskRepository taskRepos;
     private final FileService fileService;
 
     // constructor injection
-    public OpmerkingService(OpmerkingenRepository r, FileService f) {
+    public OpmerkingService(OpmerkingenRepository r, FileService f, TaskRepository tr) {
         this.repos = r;
         this.fileService = f;
+        this.taskRepos = tr;
     }
 
     public Long createOpmerking(OpmerkingenDto opmerkingenDto) {
         Opmerkingen newOpmerking = new Opmerkingen();
+        Task taskToAddComment = getTaskFromRepository(opmerkingenDto.taskId);
+
         
         // map dto to entity
+        newOpmerking.setTask(taskToAddComment);
         newOpmerking.setDateOfContact(opmerkingenDto.dateOfContact);
         newOpmerking.setOpmerking(opmerkingenDto.opmerking);
 
@@ -84,5 +91,10 @@ public class OpmerkingService {
     public Opmerkingen getOpmerkingFromRepository(Long id) {
         return Util.checkAndFindById(id, repos)
                 .orElseThrow(() -> new RecordNotFoundException("Opmerking Record not found with id: " + id));
+    }
+
+    public Task getTaskFromRepository(Long id) {
+        return Util.checkAndFindById(id, taskRepos)
+                .orElseThrow(() -> new RecordNotFoundException("Task Record not found with id: " + id));
     }
 }

@@ -21,7 +21,7 @@ public class Opmerkingen {
 
     @ManyToOne
     @JoinColumn(name = "taskId")
-    Task newTask;
+    Task task;
 
     // default constructor
     public Opmerkingen() {}
@@ -30,6 +30,6 @@ public class Opmerkingen {
         this.opmerkingenId = opmerkingenId;
         this.dateOfContact = dateOfContact;
         this.opmerking = opmerking;
-        this.newTask = task;
+        this.task = task;
     }
 }
