@@ -79,6 +79,8 @@ public class UserService {
         UserDto userDto = new UserDto();
         userDto.username = user.getUsername();
         userDto.password = user.getPassword();
+        userDto.userType = user.getUserType();
+        userDto.userTypeId = user.getUserTypeId();
         userDto.roles = user.getRoles();
         return userDto;
     }

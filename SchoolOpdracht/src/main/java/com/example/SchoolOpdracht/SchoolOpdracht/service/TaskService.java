@@ -188,6 +188,16 @@ public class TaskService {
         return true;
     }
 
+    public void deleteTask(Long id) {
+        Task taskToDelete = getTaskFromRepository(id);
+        TaskStatus statusOfTask = taskToDelete.getStatus();
+        if (statusOfTask != TaskStatus.CLOSED && statusOfTask != TaskStatus.FINISHED) {
+            throw new TaskNotRightStatusException("Task isn't closed or finished. Close the task before deleting");
+        } else {
+            repos.deleteById(taskToDelete.getTaskId());
+        }
+    }
+
     public Task getTaskFromRepository(Long id) {
         return Util.checkAndFindById(id, repos)
                 .orElseThrow(() -> new RecordNotFoundException("Task Record not found with id: " + id));

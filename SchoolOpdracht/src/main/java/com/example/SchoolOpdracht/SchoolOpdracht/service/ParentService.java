@@ -2,7 +2,9 @@ package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
 
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.ParentHasChildrenException;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ParentDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ParentService {
@@ -99,10 +103,18 @@ public class ParentService {
         return createReturnDto(requestedParent);
     }
 
-    public ParentDto deleteParentById(Long id) {
+    public void deleteParentById(Long id) {
         Parent deletedParent = getParentFromRepository(id);
-        repos.deleteById(id);
-        return createReturnDto(deletedParent);
+        List<Child> childerensList = deletedParent.getChildren();
+        if (childerensList.isEmpty())
+            repos.deleteById(deletedParent.getParentId());
+        else {
+            String childrenIds = childerensList.stream()
+                    .map(child -> child.getChildId().toString())
+                    .collect(Collectors.joining(", "));
+            throw new ParentHasChildrenException("Parent still has Childeren with id's: " + childrenIds + ".\n" +
+                    "Please move Childeren to different parent or delete the Children before deleting the parent.");
+        }
     }
 
     public ParentDto createReturnDto(Parent parentModel) {

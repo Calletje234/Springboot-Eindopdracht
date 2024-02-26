@@ -1,7 +1,10 @@
 package com.example.SchoolOpdracht.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.FileDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.RecordNotFoundException;
+import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.TaskNotRightStatusException;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ChildRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.ParentRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.ChildDto;
@@ -140,7 +143,7 @@ public class ChildService {
         TaskDto taskDto = new TaskDto();
         taskDto.childId = childId;
         taskDto.dueDate = (Util.calculateDueDate(childDto.dob));
-        taskDto.status = "new";
+        taskDto.status = TaskStatus.NEW;
 
         return taskService.createTask(taskDto);
     }
@@ -159,10 +162,12 @@ public class ChildService {
         return requestDto;
     }
 
-    public ChildDto removeChildById(Long id) {
+    public void removeChildById(Long id) {
         Child deletedChild = getChildFromRepository(id);
-        repos.deleteById(id);
-        return createReturnDto(deletedChild);
+        Task task = deletedChild.getTask();
+        if (task.getStatus() != TaskStatus.CLOSED && task.getStatus() != TaskStatus.FINISHED)
+            throw new TaskNotRightStatusException("Child has still a open task. task id = " + task.getTaskId().toString() + "Please close the task before deleting the child.");
+        repos.deleteById(deletedChild.getChildId());
     }
 
     public Child getChildFromRepository(Long id) {
