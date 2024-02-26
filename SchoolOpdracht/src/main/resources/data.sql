@@ -3,6 +3,15 @@ insert into users(username, password) values ('ADMIN', '$2a$10$nFpBJtQSwdneAM67M
 insert into users_roles(users_username, roles_rolename) values ('ADMIN', 'ADMIN');
 
 --Entries for testdata below
+-- Test Users --
+insert into users(username, password) values ('Testuser1', 'Welkom01')
+insert into users(username, password) values ('Testuser2', 'Welkom01')
+insert into users(username, password) values ('Testuser3', 'Welkom01')
+-- Add roles to users --
+insert into users_roles(users_username, roles_rolename) values ('Testuser1', 'USER')
+insert into users_roles(users_username, roles_rolename) values ('Testuser2', 'BEHANDELAAR')
+insert into users_roles(users_username, roles_rolename) values ('Testuser3', 'ADMIN')
+
 -- Teacher Entries --
 insert into Teachers(id, firstName, lastName, taskAmount) values (1, 'testTeacher1', 'lasLow1', 2)
 insert into Teachers(id, firstName, lastName, taskAmount) values (2, 'testTeacher2', 'nottingham', 3)
