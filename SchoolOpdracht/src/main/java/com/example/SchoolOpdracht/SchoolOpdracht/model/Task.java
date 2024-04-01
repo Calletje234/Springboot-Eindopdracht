@@ -20,6 +20,7 @@ public class Task {
     private Long taskId;
 
     // Variables not mapped by other services
+    @Enumerated(EnumType.STRING)
     private TaskStatus status;
     private LocalDate dueDate;
     private Boolean assigned;
@@ -32,7 +33,7 @@ public class Task {
     @JoinColumn(name = "childId")
     private Child child;
 
-    @OneToMany(mappedBy = "newTask")
+    @OneToMany(mappedBy = "task")
     private List<Opmerkingen> opmerkingen;
 
     public Task(TaskStatus status, LocalDate dueDate, boolean assigned) {

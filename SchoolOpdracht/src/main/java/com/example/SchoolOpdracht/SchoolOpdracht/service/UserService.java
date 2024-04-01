@@ -6,11 +6,13 @@ import com.example.SchoolOpdracht.SchoolOpdracht.exceptions.UserAlreadyExistsExc
 import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.User;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.UserRepository;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@Service
 public class UserService {
 
     private final UserRepository repos;
@@ -45,7 +47,7 @@ public class UserService {
     }
 
     public Iterable<UserDto> getAllUsersWithSpecificRole(String roleName) {
-        List<User> usersWithRole = repos.findUsersByRole(roleName);
+        List<User> usersWithRole = repos.findUsersByRoles(roleName);
         List<UserDto> userList = new ArrayList<>();
         for (User u : usersWithRole) {
             userList.add(createUserReturnDto(u));

@@ -3,6 +3,7 @@ package com.example.SchoolOpdracht.Integratie;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.SchoolOpdrachtApplication;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Child;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Teacher;
@@ -56,10 +57,10 @@ class taskControllerTest {
     private final LocalDate date1 = LocalDate.now();
     private final LocalDate date2 = LocalDate.of(2022, 9,15);
 
-    private final String status1 = "Picked up";
-    private final String status2 = "New";
-    private final String status3 = "In progress";
-    private final String status4 = "Done";
+    private final TaskStatus status1 = TaskStatus.PICKEDUP;
+    private final TaskStatus status2 = TaskStatus.NEW;
+    private final TaskStatus status3 = TaskStatus.INPROGRESS;
+    private final TaskStatus status4 = TaskStatus.CLOSED;
 
     @BeforeEach
     public void setUp() {
@@ -190,7 +191,7 @@ class taskControllerTest {
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
 
-    public TaskDto createDto(LocalDate date, String status, boolean assigned) {
+    public TaskDto createDto(LocalDate date, TaskStatus status, boolean assigned) {
         TaskDto taskDto = new TaskDto();
         taskDto.dueDate = date;
         taskDto.status = status;

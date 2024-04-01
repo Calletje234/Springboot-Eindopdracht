@@ -173,7 +173,7 @@ public class TaskService {
 
     public Boolean checkIfTaskIsOverdue(Long id) {
         Date today = Date.from(LocalDate.now().atStartOfDay(ZoneId.systemDefault()).toInstant());
-        Optional<Task> newTask = repos.findByIdAndCheckOverDue(id, today);
+        Optional<Task> newTask = repos.findByTaskIdAndDueDateAfter(id, today);
         return newTask.isPresent();
     }
 

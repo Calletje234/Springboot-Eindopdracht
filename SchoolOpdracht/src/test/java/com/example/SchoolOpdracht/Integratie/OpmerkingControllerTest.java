@@ -1,5 +1,6 @@
 package com.example.SchoolOpdracht.Integratie;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.SchoolOpdrachtApplication;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
@@ -50,8 +51,8 @@ class OpmerkingControllerTest {
 
     @BeforeEach
     void setUp() {
-        Task task1 = createTask("Picked up", date, true);
-        Task task2 = createTask("New", date2, false);
+        Task task1 = createTask(TaskStatus.PICKEDUP, date, true);
+        Task task2 = createTask(TaskStatus.NEW, date2, false);
         taskId1 = taskRepo.save(task1).getTaskId();
         taskId2 = taskRepo.save(task2).getTaskId();
 
@@ -148,7 +149,7 @@ class OpmerkingControllerTest {
         Opmerkingen opmerkingen = new Opmerkingen();
         opmerkingen.setDateOfContact(date);
         opmerkingen.setOpmerking(opmerking);
-        opmerkingen.setNewTask(task);
+        opmerkingen.setTask(task);
         return opmerkingen;
     }
 
@@ -159,7 +160,7 @@ class OpmerkingControllerTest {
         return opmerkingen;
     }
 
-    public Task createTask(String status, LocalDate dueDate, boolean assigned) {
+    public Task createTask(TaskStatus status, LocalDate dueDate, boolean assigned) {
         Task task = new Task();
         task.setStatus(status);
         task.setDueDate(dueDate);
