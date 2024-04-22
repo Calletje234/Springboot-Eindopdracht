@@ -22,5 +22,8 @@ public class User {
     private Long userTypeId;
 
     @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "users_roles",
+                joinColumns = @JoinColumn(name = "users_id"),
+                inverseJoinColumns = @JoinColumn(name = "roles_id"))
     private Collection<Role> roles;
 }

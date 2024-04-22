@@ -8,12 +8,14 @@ import com.example.SchoolOpdracht.SchoolOpdracht.helpers.Util;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Role;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.User;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.RoleRepository;
+import org.springframework.stereotype.Service;
 
 import javax.management.relation.RoleNotFoundException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Optional;
 
+@Service
 public class RoleService {
 
     private final RoleRepository repos;
@@ -25,7 +27,7 @@ public class RoleService {
     }
 
     public Long createNewRole(RoleDto roleDto) {
-        Optional<Role> existingRole = repos.findByRoleName(roleDto.rolename);
+        Optional<Role> existingRole = repos.findByrolename(roleDto.rolename);
         if (existingRole.isPresent()) {
             throw new RoleAlreadyExistsException("Role with name: " + roleDto.rolename + " already exists in database");
         }
