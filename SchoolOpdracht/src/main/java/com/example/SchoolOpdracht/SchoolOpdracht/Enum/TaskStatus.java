@@ -4,6 +4,7 @@ public enum TaskStatus {
         NEW,
         PICKEDUP,
         OVERDUE,
+        INPROGRESS,
         FINISHED,
         CLOSED
 }

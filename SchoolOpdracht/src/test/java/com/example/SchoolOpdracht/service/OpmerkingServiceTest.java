@@ -1,7 +1,8 @@
 package com.example.SchoolOpdracht.service;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerking;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
@@ -25,9 +26,9 @@ import static org.mockito.ArgumentMatchers.anyLong;
 @ExtendWith(MockitoExtension.class)
 class OpmerkingServiceTest {
 
-    Opmerkingen opmerking1;
-    Opmerkingen opmerking2;
-    Opmerkingen opmerking3;
+    Opmerking opmerking1;
+    Opmerking opmerking2;
+    Opmerking opmerking3;
 
     Task task1;
     Task task2;
@@ -48,13 +49,13 @@ class OpmerkingServiceTest {
 
     @BeforeEach
     void setUp() {
-        task1 = new Task("Picked up", date1, true);
-        task2 = new Task("New", date1, false);
-        task3 = new Task("Finished", date1, false);
+        task1 = new Task(TaskStatus.PICKEDUP, date1, true);
+        task2 = new Task(TaskStatus.NEW, date1, false);
+        task3 = new Task(TaskStatus.FINISHED, date1, false);
 
-        opmerking1 = new Opmerkingen(1L, date1, "I bless the rains down in Africa", task1);
-        opmerking2 = new Opmerkingen(2L, date1, "Just a small town girl, Livin' in a lonely world", task2);
-        opmerking3 = new Opmerkingen(3L, date1, "You made me a, you made me a believer, believer", task3);
+        opmerking1 = new Opmerking(1L, date1, "I bless the rains down in Africa", task1);
+        opmerking2 = new Opmerking(2L, date1, "Just a small town girl, Livin' in a lonely world", task2);
+        opmerking3 = new Opmerking(3L, date1, "You made me a, you made me a believer, believer", task3);
 
         opmerkingDto1 = new OpmerkingenDto();
         opmerkingDto1.opmerking = "I bless the rains down in Africa";
@@ -65,7 +66,7 @@ class OpmerkingServiceTest {
     @Test
     void createOpmerking() {
         // arrange
-        Mockito.when(repos.save(ArgumentMatchers.any(Opmerkingen.class))).thenReturn(opmerking1);
+        Mockito.when(repos.save(ArgumentMatchers.any(Opmerking.class))).thenReturn(opmerking1);
 
         // act
         Long result = service.createOpmerking(opmerkingDto1);
@@ -98,7 +99,7 @@ class OpmerkingServiceTest {
         // assert
         assertEquals(opmerking1.getOpmerking(), result.opmerking, "getOpmerkingById should return opmerking1");
         assertEquals(opmerking1.getDateOfContact(), result.dateOfContact, "getOpmerkingById should return opmerking1");
-        assertEquals(opmerking1.getNewTask().getTaskId(), result.taskId, "getOpmerkingById should return opmerking1");
+        assertEquals(opmerking1.getTask().getTaskId(), result.taskId, "getOpmerkingById should return opmerking1");
     }
 
     @Test
@@ -164,7 +165,7 @@ class OpmerkingServiceTest {
         Mockito.when(taskRepos.existsById(anyLong())).thenReturn(true);
 
         // act
-        Task result = service.getTaskRepos(1L);
+        Task result = service.getTaskFromRepository(1L);
 
         // assert
         assertEquals(task1.getTaskId(), result.getTaskId(), "getTaskRepos should return task1");
@@ -177,7 +178,7 @@ class OpmerkingServiceTest {
         Mockito.when(repos.existsById(anyLong())).thenReturn(true);
 
         // act
-        Opmerkingen result = service.getOpmerkingRepos(1L);
+        Opmerking result = service.getOpmerkingFromRepository(1L);
 
         // assert
         assertEquals(opmerking1.getOpmerkingenId(), result.getOpmerkingenId(), "getOpmerkingRepos should return opmerking1");

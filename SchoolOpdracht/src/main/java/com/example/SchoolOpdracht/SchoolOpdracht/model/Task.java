@@ -32,8 +32,8 @@ public class Task {
     @JoinColumn(name = "childId")
     private Child child;
 
-    @OneToMany(mappedBy = "newTask")
-    private List<Opmerkingen> opmerkingen;
+    @OneToMany(mappedBy = "task")
+    private List<Opmerking> opmerking;
 
     public Task(TaskStatus status, LocalDate dueDate, boolean assigned) {
         this.status = status;

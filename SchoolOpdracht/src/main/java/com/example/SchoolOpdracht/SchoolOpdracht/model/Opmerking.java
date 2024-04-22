@@ -10,7 +10,7 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "Opmerkingen")
 @Getter @Setter
-public class Opmerkingen {
+public class Opmerking {
     @Id
     @GeneratedValue
     private Long opmerkingenId;
@@ -24,9 +24,9 @@ public class Opmerkingen {
     Task task;
 
     // default constructor
-    public Opmerkingen() {}
+    public Opmerking() {}
 
-    public Opmerkingen(Long opmerkingenId, LocalDate dateOfContact, String opmerking, Task task) {
+    public Opmerking(Long opmerkingenId, LocalDate dateOfContact, String opmerking, Task task) {
         this.opmerkingenId = opmerkingenId;
         this.dateOfContact = dateOfContact;
         this.opmerking = opmerking;

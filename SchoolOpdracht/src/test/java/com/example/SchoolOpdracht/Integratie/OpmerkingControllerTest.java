@@ -1,14 +1,14 @@
 package com.example.SchoolOpdracht.Integratie;
 
+import com.example.SchoolOpdracht.SchoolOpdracht.Enum.TaskStatus;
 import com.example.SchoolOpdracht.SchoolOpdracht.SchoolOpdrachtApplication;
 import com.example.SchoolOpdracht.SchoolOpdracht.dto.OpmerkingenDto;
-import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerkingen;
+import com.example.SchoolOpdracht.SchoolOpdracht.model.Opmerking;
 import com.example.SchoolOpdracht.SchoolOpdracht.model.Task;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.OpmerkingenRepository;
 import com.example.SchoolOpdracht.SchoolOpdracht.repository.TaskRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import org.checkerframework.checker.units.qual.cd;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -50,13 +50,13 @@ class OpmerkingControllerTest {
 
     @BeforeEach
     void setUp() {
-        Task task1 = createTask("Picked up", date, true);
-        Task task2 = createTask("New", date2, false);
+        Task task1 = createTask(TaskStatus.PICKEDUP, date, true);
+        Task task2 = createTask(TaskStatus.NEW, date2, false);
         taskId1 = taskRepo.save(task1).getTaskId();
         taskId2 = taskRepo.save(task2).getTaskId();
 
-        Opmerkingen opmerking1 = createOpmerkingWithoutTask(date, opmerkingComment1);
-        Opmerkingen opmerking2 = createOpmerkingWithTask(date, opmerkingComment2, task1);
+        Opmerking opmerking1 = createOpmerkingWithoutTask(date, opmerkingComment1);
+        Opmerking opmerking2 = createOpmerkingWithTask(date, opmerkingComment2, task1);
         opmerking1Id = opmerkingRepo.save(opmerking1).getOpmerkingenId();
         opmerking2Id = opmerkingRepo.save(opmerking2).getOpmerkingenId();
     }
@@ -144,22 +144,22 @@ class OpmerkingControllerTest {
         return opmerkingDto;
     }
 
-    public Opmerkingen createOpmerkingWithTask(LocalDate date, String opmerking, Task task) {
-        Opmerkingen opmerkingen = new Opmerkingen();
+    public Opmerking createOpmerkingWithTask(LocalDate date, String opmerking, Task task) {
+        Opmerking opmerkingen = new Opmerking();
         opmerkingen.setDateOfContact(date);
         opmerkingen.setOpmerking(opmerking);
-        opmerkingen.setNewTask(task);
+        opmerkingen.setTask(task);
         return opmerkingen;
     }
 
-    public Opmerkingen createOpmerkingWithoutTask(LocalDate date, String opmerking) {
-        Opmerkingen opmerkingen = new Opmerkingen();
+    public Opmerking createOpmerkingWithoutTask(LocalDate date, String opmerking) {
+        Opmerking opmerkingen = new Opmerking();
         opmerkingen.setDateOfContact(date);
         opmerkingen.setOpmerking(opmerking);
         return opmerkingen;
     }
 
-    public Task createTask(String status, LocalDate dueDate, boolean assigned) {
+    public Task createTask(TaskStatus status, LocalDate dueDate, boolean assigned) {
         Task task = new Task();
         task.setStatus(status);
         task.setDueDate(dueDate);

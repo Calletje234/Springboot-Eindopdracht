@@ -189,7 +189,7 @@ class AfwezigServiceTest {
         Mockito.when(repos.existsById(anyLong())).thenReturn(true);
 
         // act
-        Afwezig result = service.getAfwezigRepos(1L);
+        Afwezig result = service.getAfwezigFromRepository(1L);
 
         // assert
         assertEquals(afwezig.getReason(), result.getReason(), "getAfwezigRepos should return repos");
